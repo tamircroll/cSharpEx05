@@ -1,0 +1,4 @@
+C:\VisualStudio Workspace\B15 Ex05 Tamir 039409594 Asaf 200436871\Othello\bin\Debug\Othello.exe
+C:\VisualStudio Workspace\B15 Ex05 Tamir 039409594 Asaf 200436871\Othello\bin\Debug\Othello.pdb
+C:\VisualStudio Workspace\B15 Ex05 Tamir 039409594 Asaf 200436871\Othello\obj\x86\Debug\Othello.exe
+C:\VisualStudio Workspace\B15 Ex05 Tamir 039409594 Asaf 200436871\Othello\obj\x86\Debug\Othello.pdb
