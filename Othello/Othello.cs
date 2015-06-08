@@ -1,125 +1,120 @@
 ﻿namespace Othello
 {
-    using System;
-
     public class Othello
     {
-        private const string k_ExitGame = "Q";
-        private const int k_AutoPlayerRecDepth = 3;
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
+        private int m_BoardSize;
+        private FormBoard m_FormBoard;
+        private FormGameOptions formGameOptions;
+        private Player m_CurPlayer;
+        private eNumOfPlayers m_NumOfPlayers;
 
-        public bool StartNewGame()
+        public Player CurPlayer
         {
-            eGameType gameType = ConsoleHandler.ChooseGameType();
-            int boardSize = ConsoleHandler.GetBoardSize();
-            m_Board = new GameBoard(boardSize);
-
-            setPlayers(gameType);
-            bool keepPlay = !startPlay(gameType, m_Board);
-
-            return keepPlay;
+            get { return m_CurPlayer; }
+            set { m_CurPlayer = value; }
         }
 
-        private bool startPlay(eGameType i_GameType, GameBoard i_Board)
+        public void StartNewGame()
         {
-            bool exitGame = false;
-            bool canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;
+            formGameOptions = new FormGameOptions();
+            formGameOptions.ShowDialog();
+            m_BoardSize = formGameOptions.BoardSize;
+            m_NumOfPlayers = formGameOptions.NumOfPlayers;
+            startPlaying();
+        }
 
-            while (true)
-            {
-                if (canPlayerOnePlay)
-                {
-                    exitGame = playTurn(m_Player1);
-                }
+        private void startPlaying()
+        {
+            bool gameOver = false ,exitGame = false, canPlayerOnePlay = true;
 
-                bool canPlayerTwoPlay = m_Player2.GetValidateMoves(i_Board).Count > 0;
-                bool canPlayerOnePlayAfterTurn = m_Player1.GetValidateMoves(i_Board).Count > 0;
-                if ((!canPlayerOnePlayAfterTurn && !canPlayerTwoPlay) || exitGame)
-                {
-                    break;
-                }
+//            while (!gameOver)
+//            {
+                m_Board = new GameBoard(this, m_BoardSize);
+                m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
+                setPlayers(m_NumOfPlayers);
+                CurPlayer = m_Player1;
+                m_Board.InitFirstPlayers();
 
-                if (!canPlayerOnePlay)
+                m_FormBoard.ShowDialog();
+
+                while (!gameOver)
                 {
-                    ConsoleHandler.noMovesMessage(m_Player1, m_Board);
-                }
-                
-                if (canPlayerTwoPlay)
-                {
-                    if (i_GameType == eGameType.TwoPlayers)
+                    if (canPlayerOnePlay)
                     {
-                        exitGame = playTurn(m_Player2);
+//                        gameOver = playTurn(m_Player1);
                     }
-                    else if (i_GameType == eGameType.OnePlayer)
+
+                    bool canPlayerTwoPlay = m_Player2.GetValidateMoves(m_Board).Count > 0;
+                    bool canPlayerOnePlayAfterTurn = m_Player1.GetValidateMoves(m_Board).Count > 0;
+                    if ((!canPlayerOnePlayAfterTurn && !canPlayerTwoPlay) || exitGame)
                     {
-                        View.DrawBoard(m_Board);
-                        Console.WriteLine("Computer is Playing, Please wait for your turn.");
-                        AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board, k_AutoPlayerRecDepth);
+                        break;
                     }
-                }
 
-                canPlayerOnePlay = m_Player1.GetValidateMoves(i_Board).Count > 0;
-                bool canPlayerTwoPlayAfterTurn = m_Player2.GetValidateMoves(i_Board).Count > 0;
-                if ((!canPlayerOnePlay && !canPlayerTwoPlayAfterTurn) || exitGame)
-                {
-                    break; 
-                }
+                    if (!canPlayerOnePlay)
+                    {
+                    }
 
-                if (!canPlayerTwoPlay)
-                {
-                    ConsoleHandler.noMovesMessage(m_Player2, m_Board);
-                }
+                    if (canPlayerTwoPlay)
+                    {
+                        if (m_NumOfPlayers == eNumOfPlayers.TwoPlayers)
+                        {
+//                            exitGame = playTurn(m_Player2);
+                        }
+                        else if (m_NumOfPlayers == eNumOfPlayers.OnePlayer)
+                        {
+//                            AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board, k_AutoPlayerRecDepth);
+                        }
+                    }
+
+                    canPlayerOnePlay = m_Player1.GetValidateMoves(m_Board).Count > 0;
+                    bool canPlayerTwoPlayAfterTurn = m_Player2.GetValidateMoves(m_Board).Count > 0;
+                    if ((!canPlayerOnePlay && !canPlayerTwoPlayAfterTurn) || exitGame)
+                    {
+                        break;
+                    }
+
+                    if (!canPlayerTwoPlay)
+                    {
+                    }
+//                }
+
+                m_FormBoard.Close();
             }
-
-            if (!exitGame)
-            {
-                View.ShowScore(m_Player1, m_Player2, m_Board);
-            }
-
-            return exitGame;
         }
 
-        private bool playTurn(Player i_Player)
+
+//        private bool playTurn(Player i_Player)
+//        {
+//            string msg = string.Format("{0}, Please choose a cell (Column and Row) and press Enter:");
+//            bool exitGame = false;
+//
+//            while (true)
+//            {
+//            }
+
+//            return exitGame;
+//        }
+
+        private void setPlayers(eNumOfPlayers numOfPlayers)
         {
-            string msg = string.Format("{0}, Please choose a cell (Column and Row) and press Enter:", i_Player.Name);
-            bool exitGame = false;
+            m_Player1 = new Player(ePlayer.Player1, m_Board);
 
-            while (true)
+            if (numOfPlayers == eNumOfPlayers.OnePlayer)
             {
-                View.DrawBoard(m_Board);
-                Console.WriteLine(msg);
-                string playedCellStr = Console.ReadLine();
-
-                if (playedCellStr.ToUpper() == k_ExitGame)
-                {
-                    exitGame = true;
-                    break;
-                }
-
-                if (Controller.TryPlayMove(i_Player, playedCellStr, ref msg, m_Board))
-                {
-                    break;
-                }
-            }
-
-            return exitGame;
-        }
-
-        private void setPlayers(eGameType gameType)
-        {
-            string playerName = ConsoleHandler.GetPlayerName("First");
-            m_Player1 = new Player(playerName, ePlayer.Player1, m_Board);
-
-            if (gameType == eGameType.OnePlayer)
-            {
-                m_Player2 = new Player("Computer", ePlayer.Player2, m_Board);
+                m_Player2 = new Player(ePlayer.Player2, m_Board);
             }
             else
             {
-                playerName = ConsoleHandler.GetPlayerName("Second");
-                m_Player2 = new Player(playerName, ePlayer.Player2, m_Board);
+                m_Player2 = new Player(ePlayer.Player2, m_Board);
             }
+        }
+
+        public void SwitchCurPlayer()
+        {
+            CurPlayer = (CurPlayer.Equals(m_Player1)) ? m_Player2 : m_Player1;
         }
     }
 }

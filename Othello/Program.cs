@@ -6,12 +6,13 @@
         {
             bool keepPlayng;
 
-            do
-            {
+//            do
+//            {
                 Othello othello = new Othello();
-                keepPlayng = othello.StartNewGame();
-            }
-            while (keepPlayng);
+//              keepPlayng = 
+                othello.StartNewGame();
+//            }
+//            while (keepPlayng);
         }
     }
 }
