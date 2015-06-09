@@ -47,14 +47,14 @@ namespace Othello
 
         public void InitFirstPlayers()
         {
-            m_Board[Size / 2, Size / 2] = ePlayer.Player1;
-            m_Board[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.Player1;
-            m_Board[Size / 2, (Size / 2) - 1] = ePlayer.Player2;
-            m_Board[(Size / 2) - 1, Size / 2] = ePlayer.Player2;
-            m_SetColor.Invoke(ePlayer.Player1, Size / 2, Size / 2);
-            m_SetColor.Invoke(ePlayer.Player1, (Size / 2) - 1, (Size / 2) - 1);
-            m_SetColor.Invoke(ePlayer.Player2, Size / 2, (Size / 2) - 1);
-            m_SetColor.Invoke(ePlayer.Player2, (Size / 2) - 1, Size / 2);
+            m_Board[Size / 2, Size / 2] = ePlayer.WhitePlayer;
+            m_Board[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.WhitePlayer;
+            m_Board[Size / 2, (Size / 2) - 1] = ePlayer.BlackPlayer;
+            m_Board[(Size / 2) - 1, Size / 2] = ePlayer.BlackPlayer;
+            m_SetColor.Invoke(ePlayer.WhitePlayer, Size / 2, Size / 2);
+            m_SetColor.Invoke(ePlayer.WhitePlayer, (Size / 2) - 1, (Size / 2) - 1);
+            m_SetColor.Invoke(ePlayer.BlackPlayer, Size / 2, (Size / 2) - 1);
+            m_SetColor.Invoke(ePlayer.BlackPlayer, (Size / 2) - 1, Size / 2);
             SetPossibleMoves();
         }
 
@@ -96,21 +96,21 @@ namespace Othello
             set
             {
                 m_LastUpdate = DateTime.Now;
-                if (value == ePlayer.Player1 && m_Board[i_Row, i_Col] == ePlayer.Player2)
+                if (value == ePlayer.WhitePlayer && m_Board[i_Row, i_Col] == ePlayer.BlackPlayer)
                 {
                     m_PlayerOneScore++;
                     m_PlayerTwoScore--;
                 }
-                else if (value == ePlayer.Player2 && m_Board[i_Row, i_Col] == ePlayer.Player1)
+                else if (value == ePlayer.BlackPlayer && m_Board[i_Row, i_Col] == ePlayer.WhitePlayer)
                 {
                     m_PlayerOneScore--;
                     m_PlayerTwoScore++;
                 }
-                else if (value == ePlayer.Player1 && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
+                else if (value == ePlayer.WhitePlayer && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
                 {
                     m_PlayerOneScore++;
                 }
-                else if (value == ePlayer.Player2 && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
+                else if (value == ePlayer.BlackPlayer && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
                 {
                     m_PlayerTwoScore++;
                 }
@@ -143,7 +143,7 @@ namespace Othello
 
         public int GetScore(ePlayer i_Player)
         {
-            return i_Player == ePlayer.Player1 ? m_PlayerOneScore : m_PlayerTwoScore;
+            return i_Player == ePlayer.WhitePlayer ? m_PlayerOneScore : m_PlayerTwoScore;
         }
     }
 }

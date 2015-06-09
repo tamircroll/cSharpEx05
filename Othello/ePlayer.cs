@@ -5,7 +5,7 @@ namespace Othello
     public enum ePlayer : byte
     {
         NoPlayer = 0,
-        Player1 = 1,
-        Player2 = 2
+        WhitePlayer = 1,
+        BlackPlayer = 2
     }
 }

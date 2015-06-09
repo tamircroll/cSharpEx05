@@ -50,9 +50,7 @@
     <Compile Include="FormGameOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGameOver.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GameBoard.cs" />
     <Compile Include="Othello.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
