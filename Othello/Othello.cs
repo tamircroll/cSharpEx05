@@ -34,7 +34,7 @@
                 m_Board = new GameBoard(this, m_BoardSize);
                 m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
                 setPlayers(m_NumOfPlayers);
-                CurPlayer = m_Player1;
+                CurPlayer = m_Player2;
                 m_Board.InitFirstPlayers();
 
                 m_FormBoard.ShowDialog();
@@ -85,18 +85,6 @@
             }
         }
 
-
-//        private bool playTurn(Player i_Player)
-//        {
-//            string msg = string.Format("{0}, Please choose a cell (Column and Row) and press Enter:");
-//            bool exitGame = false;
-//
-//            while (true)
-//            {
-//            }
-
-//            return exitGame;
-//        }
 
         private void setPlayers(eNumOfPlayers numOfPlayers)
         {

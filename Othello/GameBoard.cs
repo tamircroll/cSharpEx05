@@ -5,7 +5,7 @@ namespace Othello
 {
     public delegate void SetCellColor(ePlayer i_Player, int i_Row, int i_column);
     public delegate void SetCellPossibleMove(ePlayer i_Player, int i_Row, int i_column);
-    public delegate void SetCellEmpty(ePlayer i_Player, int i_Row, int i_column);
+    public delegate void SetCellEmpty();
 
     public class GameBoard
     {
@@ -18,7 +18,7 @@ namespace Othello
         public event SetCellPossibleMove m_SetPossibleCell;
         public event SetCellEmpty m_SetCellEmpty;
 
-        public GameBoard(Othello  i_Othello, int i_Size)
+        public GameBoard(Othello i_Othello, int i_Size)
         {
             m_Othello = i_Othello;
             r_Size = i_Size;
@@ -49,37 +49,43 @@ namespace Othello
             }
         }
 
-        public ePlayer this[int i_X, int i_Y]
+        public ePlayer this[int i_Row, int i_Col]
         {
             get
             {
-                return m_Board[i_X, i_Y];
+                return m_Board[i_Row, i_Col];
             }
 
             set
             {
                 m_LastUpdate = DateTime.Now;
-                if (value == ePlayer.Player1 && m_Board[i_X, i_Y] == ePlayer.Player2)
+                if (value == ePlayer.Player1 && m_Board[i_Row, i_Col] == ePlayer.Player2)
                 {
                     m_PlayerOneScore++;
                     m_PlayerTwoScore--;
                 }
-                else if (value == ePlayer.Player2 && m_Board[i_X, i_Y] == ePlayer.Player1)
+                else if (value == ePlayer.Player2 && m_Board[i_Row, i_Col] == ePlayer.Player1)
                 {
                     m_PlayerOneScore--;
                     m_PlayerTwoScore++;
                 }
-                else if (value == ePlayer.Player1 && m_Board[i_X, i_Y] == ePlayer.NoPlayer)
+                else if (value == ePlayer.Player1 && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
                 {
                     m_PlayerOneScore++;
                 }
-                else if (value == ePlayer.Player2 && m_Board[i_X, i_Y] == ePlayer.NoPlayer)
+                else if (value == ePlayer.Player2 && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
                 {
                     m_PlayerTwoScore++;
                 }
 
-                m_Board[i_X, i_Y] = value;
+                m_Board[i_Row, i_Col] = value;
+                m_SetColor.Invoke(m_Othello.CurPlayer.PlayerEnum, i_Row, i_Col);
             }
+        }
+
+        public void PaintGray()
+        {
+            m_SetCellEmpty.Invoke();
         }
 
         public DateTime? LastUpdate

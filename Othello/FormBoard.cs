@@ -6,7 +6,7 @@ namespace Othello
     public class FormBoard : Form
     {
         private const int k_LengthFromBoarders = 20;
-        private const int k_CellSize = 80;
+        private const int k_CellSize = 70;
         private int m_NumOfCells;
         private GameBoard m_Board;
         private eNumOfPlayers m_NumOfPlayers;
@@ -44,7 +44,7 @@ namespace Othello
         private void ExecuteMove(object i_Sender, EventArgs i_E)
         {
             Cell cell = i_Sender as Cell;
-            Controller.ExecutePlayMove(cell.Row, cell.column, m_Othello.CurPlayer, m_Board);
+            Controller.ExecutePlayMove(m_Othello, cell.Row, cell.column, m_Othello.CurPlayer, m_Board);
         }
 
         public Cell[,] Cells
@@ -57,6 +57,7 @@ namespace Othello
             int cellWidthLocation = i_Row * k_CellSize + (k_LengthFromBoarders);
             int cellHightLocation = i_Column * k_CellSize + (k_LengthFromBoarders);
             Cell toReturn = new Cell(this, i_Row, i_Column);
+            toReturn.BackColor = Color.LightGray;
 
 
             toReturn.Height = k_CellSize;
@@ -104,13 +105,13 @@ namespace Othello
             }
         }
 
-        public void EmptyCell(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
+        public void EmptyCell() //TODO: Rename
         {
             foreach (Cell cell in Cells)
             {
                 if (cell.Player == ePlayer.NoPlayer)
                 {
-                    cell.BackColor = Color.Gray;
+                    cell.BackColor = Color.LightGray;
                     cell.Enabled = false;
                 }
             }

@@ -8,43 +8,11 @@ namespace Othello
     {
         public event SetCellPossibleMove m_SetPossibleCell;
 
-//        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, GameBoard i_Board)
-//        {
-//            string emptyMsg = string.Empty;
-//            return TryPlayMove(i_Player, i_ChosenCell, ref emptyMsg, i_Board);
-//        }
-
-//        public static bool TryPlayMove(Player i_Player, string i_ChosenCell, ref string o_Msg, GameBoard i_Board)
-//        {
-//            int row;
-//            bool validMove = false;
-//
-//            if (!string.IsNullOrEmpty(i_ChosenCell))
-//            {
-//                char columnChar = i_ChosenCell.ToLower().ToCharArray()[0];
-//                string rowStr = i_ChosenCell.Substring(1);
-//                int column = columnChar - 'a';
-//                validMove = inputIsCell(rowStr, columnChar, out row, i_Board);
-//
-//                else
-//                {
-//                    validMove = isMoveInValidMovesList(row, column, i_Player, i_Board);
-//                    if (!validMove)
-//                    {
-//                        o_Msg = string.Format("{0}, You can not choose cell {1}, Please play again.", i_Player.Name, i_ChosenCell);
-//                    }
-//                    else
-//                    {
-//                        ExecutePlayMove(row, column, i_Player, i_Board);
-//                    }
-//                }
-//            }
-//
-//            return validMove;
-//        }
-
-        public static void ExecutePlayMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
+//    
+        public static void ExecutePlayMove(Othello i_Othello, int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
+            i_Board.PaintGray();
+
             for (int rowMoveDirection = -1; rowMoveDirection <= 1; rowMoveDirection++)
             {
                 for (int columnMoveDirection = -1; columnMoveDirection <= 1; columnMoveDirection++)
@@ -60,6 +28,9 @@ namespace Othello
             }
 
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
+            i_Othello.SwitchCurPlayer();
+            i_Board.SetPossibleMoves();
+            
         }
 
         public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
@@ -150,31 +121,5 @@ namespace Othello
 
             return validMove;
         }
-
-        private static bool inputIsCell(string i_RowStr, char i_Column, out int o_Row, GameBoard i_Board)
-        {
-            bool canParse = int.TryParse(i_RowStr, out o_Row);
-
-            if (canParse)
-            {
-                if (o_Row < 1 || o_Row > i_Board.Size)
-                {
-                    canParse = false;
-                }
-                else if (i_Column - 'a' < 0 || i_Column - 'a' >= i_Board.Size)
-                {
-                    canParse = false;
-                }
-
-                o_Row--;
-            }
-
-            return canParse;
-        }
-
-//        private static bool isMoveInValidMovesList(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
-//        {
-//            return i_Player.GetValidateMoves(i_Board).Contains(string.Format("{0},{1}", i_Row, i_Column));
-//        }
     }
 }
