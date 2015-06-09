@@ -7,9 +7,9 @@ namespace Othello
     public class FormGameOptions : Form
     {
         private const int k_LengthFromSideBoarder = 10;
-        Button m_ButtonEncreaseSize = new Button();
-        Button m_ButtonOnePlayer = new Button();
-        Button m_ButtonTwoPlayer = new Button();
+        private Button m_ButtonEncreaseSize = new Button();
+        private Button m_ButtonOnePlayer = new Button();
+        private Button m_ButtonTwoPlayer = new Button();
         private int m_ButtonHight;
         private int m_BoardSize = 6;
         private eNumOfPlayers m_NumOfPlayers;
@@ -70,12 +70,11 @@ namespace Othello
         private void initTwoPlayerButton()
         {
             m_ButtonTwoPlayer.Text = "Play against your friend";
-            m_ButtonTwoPlayer.Location = new Point(2 * k_LengthFromSideBoarder + m_ButtonOnePlayer.Width, ClientSize.Height / 2);
+            m_ButtonTwoPlayer.Location = new Point((2 * k_LengthFromSideBoarder) + m_ButtonOnePlayer.Width, ClientSize.Height / 2);
             m_ButtonTwoPlayer.Width = (m_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
             m_ButtonTwoPlayer.Height = m_ButtonHight;
             m_ButtonTwoPlayer.Click += twoPlayerButton_Click;
         }
-
 
         private void increaseBoardSizeByTwo(object i_Sender, EventArgs i_E) //TODO: Change name
         {

@@ -1,14 +1,9 @@
-﻿using System;
-
-namespace Othello
+﻿namespace Othello
 {
     using System.Collections.Generic;
 
     public class Controller
     {
-        public event SetCellPossibleMove m_SetPossibleCell;
-
-//    
         public static void ExecutePlayMove(Othello i_Othello, int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
             i_Board.PaintGray();
@@ -30,9 +25,8 @@ namespace Othello
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
             i_Othello.SwitchCurPlayer();
             i_Board.SetPossibleMoves();
-            
         }
-
+        
         public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
         {
             List<int[]> validateMoves = new List<int[]>();
@@ -45,7 +39,7 @@ namespace Othello
 
                     if(validMove)
                     {
-                        validateMoves.Add(new[] {row, column});
+                        validateMoves.Add(new[] { row, column });
                     }
                 }
             }

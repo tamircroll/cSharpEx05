@@ -4,15 +4,8 @@
     {
         public static void Main()
         {
-            bool keepPlayng;
-
-//            do
-//            {
-                Othello othello = new Othello();
-//              keepPlayng = 
-                othello.StartNewGame();
-//            }
-//            while (keepPlayng);
+            Othello othello = new Othello();
+            othello.StartNewGame();
         }
     }
 }

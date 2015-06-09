@@ -5,7 +5,6 @@
         private Player m_Player1, m_Player2;
         private GameBoard m_Board;
         private int m_BoardSize;
-        private FormBoard m_FormBoard;
         private FormGameOptions formGameOptions;
         private Player m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
@@ -27,64 +26,18 @@
 
         private void startPlaying()
         {
-            bool gameOver = false ,exitGame = false, canPlayerOnePlay = true;
-
-//            while (!gameOver)
-//            {
+            bool exitGame = false;
+            while (!exitGame)
+            {
                 m_Board = new GameBoard(this, m_BoardSize);
-                m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
+                FormBoard m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
+
                 setPlayers(m_NumOfPlayers);
-                CurPlayer = m_Player2;
+                CurPlayer = m_Player1;
                 m_Board.InitFirstPlayers();
-
                 m_FormBoard.ShowDialog();
-
-                while (!gameOver)
-                {
-                    if (canPlayerOnePlay)
-                    {
-//                        gameOver = playTurn(m_Player1);
-                    }
-
-                    bool canPlayerTwoPlay = m_Player2.GetValidateMoves(m_Board).Count > 0;
-                    bool canPlayerOnePlayAfterTurn = m_Player1.GetValidateMoves(m_Board).Count > 0;
-                    if ((!canPlayerOnePlayAfterTurn && !canPlayerTwoPlay) || exitGame)
-                    {
-                        break;
-                    }
-
-                    if (!canPlayerOnePlay)
-                    {
-                    }
-
-                    if (canPlayerTwoPlay)
-                    {
-                        if (m_NumOfPlayers == eNumOfPlayers.TwoPlayers)
-                        {
-//                            exitGame = playTurn(m_Player2);
-                        }
-                        else if (m_NumOfPlayers == eNumOfPlayers.OnePlayer)
-                        {
-//                            AutoPlay.SmartPlay(m_Player2, m_Player1, m_Board, k_AutoPlayerRecDepth);
-                        }
-                    }
-
-                    canPlayerOnePlay = m_Player1.GetValidateMoves(m_Board).Count > 0;
-                    bool canPlayerTwoPlayAfterTurn = m_Player2.GetValidateMoves(m_Board).Count > 0;
-                    if ((!canPlayerOnePlay && !canPlayerTwoPlayAfterTurn) || exitGame)
-                    {
-                        break;
-                    }
-
-                    if (!canPlayerTwoPlay)
-                    {
-                    }
-//                }
-
-                m_FormBoard.Close();
             }
         }
-
 
         private void setPlayers(eNumOfPlayers numOfPlayers)
         {
@@ -102,7 +55,7 @@
 
         public void SwitchCurPlayer()
         {
-            CurPlayer = (CurPlayer.Equals(m_Player1)) ? m_Player2 : m_Player1;
+            CurPlayer = CurPlayer.Equals(m_Player1) ? m_Player2 : m_Player1;
         }
     }
 }

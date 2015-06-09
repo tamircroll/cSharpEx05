@@ -4,8 +4,12 @@ using System.Collections.Generic;
 namespace Othello
 {
     public delegate void SetCellColor(ePlayer i_Player, int i_Row, int i_column);
+
     public delegate void SetCellPossibleMove(ePlayer i_Player, int i_Row, int i_column);
+    
     public delegate void SetCellEmpty();
+    
+    public delegate void GameOver();
 
     public class GameBoard
     {
@@ -14,28 +18,43 @@ namespace Othello
         private DateTime? m_LastUpdate;
         private int m_PlayerOneScore = 2, m_PlayerTwoScore = 2;
         private Othello m_Othello;
+
         public event SetCellColor m_SetColor;
+
         public event SetCellPossibleMove m_SetPossibleCell;
+
         public event SetCellEmpty m_SetCellEmpty;
+
+        public event GameOver m_GameOver;
 
         public GameBoard(Othello i_Othello, int i_Size)
         {
             m_Othello = i_Othello;
             r_Size = i_Size;
-            m_Board = new ePlayer[i_Size, i_Size];
+            m_Board = new ePlayer[r_Size, r_Size];
             m_LastUpdate = DateTime.Now;
+        }
+
+        public int PlayerOneScore
+        {
+            get { return m_PlayerOneScore; }
+        }
+
+        public int PlayerTwoScore
+        {
+            get { return m_PlayerTwoScore; }
         }
 
         public void InitFirstPlayers()
         {
-            m_Board[Size/2, Size/2] = ePlayer.Player1;
-            m_Board[(Size/2) - 1, (Size/2) - 1] = ePlayer.Player1;
-            m_Board[Size/2, (Size/2) - 1] = ePlayer.Player2;
-            m_Board[(Size/2) - 1, Size/2] = ePlayer.Player2;
-            m_SetColor.Invoke(ePlayer.Player1,Size/2, Size/2);
-            m_SetColor.Invoke(ePlayer.Player1, (Size/2) - 1, (Size/2) - 1);
-            m_SetColor.Invoke(ePlayer.Player2, Size/2, (Size/2) - 1);
-            m_SetColor.Invoke(ePlayer.Player2, (Size/2) - 1, Size/2);
+            m_Board[Size / 2, Size / 2] = ePlayer.Player1;
+            m_Board[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.Player1;
+            m_Board[Size / 2, (Size / 2) - 1] = ePlayer.Player2;
+            m_Board[(Size / 2) - 1, Size / 2] = ePlayer.Player2;
+            m_SetColor.Invoke(ePlayer.Player1, Size / 2, Size / 2);
+            m_SetColor.Invoke(ePlayer.Player1, (Size / 2) - 1, (Size / 2) - 1);
+            m_SetColor.Invoke(ePlayer.Player2, Size / 2, (Size / 2) - 1);
+            m_SetColor.Invoke(ePlayer.Player2, (Size / 2) - 1, Size / 2);
             SetPossibleMoves();
         }
 
@@ -43,6 +62,24 @@ namespace Othello
         {
             List<int[]> possibles = Controller.ListAllPossibleMoves(m_Othello.CurPlayer, this);
 
+            if (possibles.Count == 0)
+            {
+                m_Othello.SwitchCurPlayer();
+                possibles = Controller.ListAllPossibleMoves(m_Othello.CurPlayer, this);
+            }
+
+            if (possibles.Count != 0)
+            {
+                setPossibleMove(possibles);
+            }
+            else
+            {
+                m_GameOver.Invoke();
+            }
+        }
+
+        private void setPossibleMove(List<int[]> possibles)
+        {
             foreach (int[] possible in possibles)
             {
                 m_SetPossibleCell.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
@@ -106,34 +143,7 @@ namespace Othello
 
         public int GetScore(ePlayer i_Player)
         {
-            if (i_Player == ePlayer.Player1)
-            {
-                return m_PlayerOneScore;
-            }
-            else
-            {
-                return m_PlayerTwoScore;
-            }
-        }
-
-        public GameBoard CloneBoard()
-        {
-            GameBoard cloned = new GameBoard(m_Othello, Size);
-            cloned.m_PlayerOneScore = m_PlayerOneScore;
-            cloned.m_PlayerTwoScore = m_PlayerTwoScore;
-            ePlayer[,] board = new ePlayer[Size, Size];
-
-            for (int row = 0; row < Size; row++)
-            {
-                for (int col = 0; col < Size; col++)
-                {
-                    board[row, col] = this[row, col];
-                }
-            }
-
-            cloned.Board = board;
-
-            return cloned;
+            return i_Player == ePlayer.Player1 ? m_PlayerOneScore : m_PlayerTwoScore;
         }
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+
 namespace Othello
 {
     public class FormBoard : Form
     {
-        private const int k_LengthFromBoarders = 20;
+        private const int k_LengthFromBoarders = 15;
         private const int k_CellSize = 70;
+        private const int k_CellSpaces = 1;
         private int m_NumOfCells;
         private GameBoard m_Board;
         private eNumOfPlayers m_NumOfPlayers;
         private Othello m_Othello;
-        Cell[,] m_Cells;
+        private Cell[,] m_Cells;
 
         public FormBoard(Othello i_Othello, FormGameOptions m_FormGameOptions, GameBoard i_Board)
         {
@@ -25,11 +27,12 @@ namespace Othello
             m_Board.m_SetColor += SetCell;
             m_Board.m_SetPossibleCell += PossibleMove;
             m_Board.m_SetCellEmpty += EmptyCell;
+            m_Board.m_GameOver += GameOver;
         }
 
         private void setCells()
         {
-            for (int i = 0 ; i < m_NumOfCells ; i++)
+            for (int i = 0; i < m_NumOfCells; i++)
             {
                 for (int j = 0; j < m_NumOfCells; j++)
                 {
@@ -54,11 +57,10 @@ namespace Othello
 
         private Cell CreateCell(int i_Row, int i_Column)
         {
-            int cellWidthLocation = i_Row * k_CellSize + (k_LengthFromBoarders);
-            int cellHightLocation = i_Column * k_CellSize + (k_LengthFromBoarders);
-            Cell toReturn = new Cell(this, i_Row, i_Column);
+            int cellWidthLocation = (i_Row * k_CellSize) + (i_Row * k_CellSpaces) + k_LengthFromBoarders;
+            int cellHightLocation = (i_Column * k_CellSize) + (i_Column * k_CellSpaces) + k_LengthFromBoarders;
+            Cell toReturn = new Cell(i_Row, i_Column);
             toReturn.BackColor = Color.LightGray;
-
 
             toReturn.Height = k_CellSize;
             toReturn.Width = k_CellSize;
@@ -76,13 +78,16 @@ namespace Othello
         private void setBordOptions()
         {
             m_Cells = new Cell[m_NumOfCells, m_NumOfCells];
-            int boardSize = (k_LengthFromBoarders * 2) + (k_CellSize * m_NumOfCells);
+            int boardSize = (k_LengthFromBoarders * 2) + (k_CellSize * m_NumOfCells) + ((m_NumOfCells - 1) * k_CellSpaces);
             ClientSize = new Size(boardSize, boardSize);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             StartPosition = FormStartPosition.CenterScreen;
         }
 
-
+        public void GameOver()
+        {
+            Close();
+        }
 
         public void SetCell(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
         {
