@@ -23,11 +23,18 @@ namespace Othello
             m_Board = i_Board;
             setBordOptions();
             setCells();
+            SetTitle();
 
             m_Board.m_SetColor += SetCell;
             m_Board.m_SetPossibleCell += PossibleMove;
             m_Board.m_SetCellEmpty += EmptyCell;
             m_Board.m_GameOver += GameOver;
+            m_Othello.m_TurnPlayed += SetTitle;
+        }
+
+        public void SetTitle()
+        {
+            Text = string.Format("Othello - {0}'s Player Turn", m_Othello.CurPlayer.PlayerEnum);
         }
 
         private void setCells()
@@ -94,15 +101,15 @@ namespace Othello
             Cell cell = Cells[i_Row, i_column];
 
             cell.Player = i_Player;
-            cell.BackColor = (i_Player == ePlayer.Player1) ? Color.White : Color.Black;
-            cell.ForeColor = (i_Player == ePlayer.Player1) ? Color.Black : Color.White;
+            cell.BackColor = (i_Player == ePlayer.White) ? Color.White : Color.Black;
+            cell.ForeColor = (i_Player == ePlayer.White) ? Color.Black : Color.White;
             cell.Text = "O";
             cell.Enabled = false;
         }
 
         public void PossibleMove(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
         {
-            if (!(NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player != ePlayer.Player2))
+            if (!(NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player != ePlayer.Black))
             {
                 Cell cell = Cells[i_Row, i_column];
                 cell.Enabled = true;

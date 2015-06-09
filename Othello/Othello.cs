@@ -4,21 +4,18 @@ using System.Windows.Forms;
 
 namespace Othello
 {
+    public delegate void TurnPlayed(); //TODO: Rename!!
+
     public class Othello
     {
-        private Player m_Player1, m_Player2;
+        private Player m_PlayerWhite, m_PlayerBlack;
         private GameBoard m_Board;
         private int m_BoardSize;
         private FormGameOptions formGameOptions;
         private Player m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
         private int m_BlackWins = 0, m_WhiteWins = 0;
-
-        public Player CurPlayer
-        {
-            get { return m_CurPlayer; }
-            set { m_CurPlayer = value; }
-        }
+        public event TurnPlayed m_TurnPlayed;
 
         public void StartNewGame()
         {
@@ -35,11 +32,10 @@ namespace Othello
             while (!exitGame)
             {
                 m_Board = new GameBoard(this, m_BoardSize);
+                setPlayers();
+                CurPlayer = m_PlayerWhite;
                 FormBoard m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
-
-                setPlayers(m_NumOfPlayers);
-                CurPlayer = m_Player1;
-                m_Board.InitFirstPlayers();
+                m_Board.InitFirstPieces();
                 m_FormBoard.ShowDialog();
                 ePlayer winner = setWinner();
                 addOneToWinner(winner);
@@ -49,14 +45,19 @@ namespace Othello
 
         private void addOneToWinner(ePlayer i_Winner)
         {
-            if (i_Winner == ePlayer.WhitePlayer)
+            if (i_Winner == ePlayer.White)
             {
                 m_WhiteWins++;
             }
-            else if (i_Winner == ePlayer.BlackPlayer)
+            else if (i_Winner == ePlayer.Black)
             {
                 m_BlackWins++;
             }
+        }
+
+        public void DoAfterTurn()
+        {
+            m_TurnPlayed.Invoke();
         }
 
         private ePlayer setWinner()
@@ -65,11 +66,11 @@ namespace Othello
 
             if (m_Board.PlayerOneScore > m_Board.PlayerTwoScore)
             {
-                winner = ePlayer.WhitePlayer;
+                winner = ePlayer.White;
             }
             else if (m_Board.PlayerOneScore < m_Board.PlayerTwoScore)
             {
-                winner = ePlayer.BlackPlayer;
+                winner = ePlayer.Black;
             }
             else
             {
@@ -83,11 +84,11 @@ namespace Othello
         {
             StringBuilder msg = new StringBuilder();
 
-            if (i_Winner == ePlayer.WhitePlayer)
+            if (i_Winner == ePlayer.White)
             {
                 msg.Append("White Won!!! ");
             }
-            else if (i_Winner == ePlayer.BlackPlayer)
+            else if (i_Winner == ePlayer.Black)
             {
                 msg.Append("Black Won!!! ");
             }
@@ -100,30 +101,34 @@ namespace Othello
             msg.AppendFormat("({0}/{1}){2}", m_WhiteWins, m_BlackWins, Environment.NewLine);
             msg.AppendFormat("Would you like to play another round?");
 
-            DialogResult toPlayAgain = MessageBox.Show(msg.ToString(),
+            DialogResult toPlayAgain = MessageBox.Show(
+                msg.ToString(),
                 "Othello",
                 MessageBoxButtons.YesNo);
 
             return toPlayAgain == DialogResult.No;
         }
 
-        private void setPlayers(eNumOfPlayers numOfPlayers)
+        private void setPlayers()
         {
-            m_Player1 = new Player(ePlayer.WhitePlayer, m_Board);
-
-            if (numOfPlayers == eNumOfPlayers.OnePlayer)
-            {
-                m_Player2 = new Player(ePlayer.BlackPlayer, m_Board);
-            }
-            else
-            {
-                m_Player2 = new Player(ePlayer.BlackPlayer, m_Board);
-            }
+            m_PlayerWhite = new Player(ePlayer.White, m_Board);
+            m_PlayerBlack = new Player(ePlayer.Black, m_Board);
         }
 
         public void SwitchCurPlayer()
         {
-            CurPlayer = CurPlayer.Equals(m_Player1) ? m_Player2 : m_Player1;
+            CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
+        }
+
+        public Player CurPlayer
+        {
+            get { return m_CurPlayer; }
+            set { m_CurPlayer = value; }
+        }
+
+        public eNumOfPlayers NumOfPlayers
+        {
+            get { return m_NumOfPlayers; }
         }
     }
 }

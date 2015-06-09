@@ -14,10 +14,10 @@ namespace Othello
             r_Board = new ePlayer[i_Size, i_Size];
             m_LastUpdate = DateTime.Now;
 
-            r_Board[i_Size / 2, i_Size / 2] = ePlayer.WhitePlayer;
-            r_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayer.WhitePlayer;
-            r_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayer.BlackPlayer;
-            r_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayer.BlackPlayer;
+            r_Board[i_Size / 2, i_Size / 2] = ePlayer.White;
+            r_Board[(i_Size / 2) - 1, (i_Size / 2) - 1] = ePlayer.White;
+            r_Board[i_Size / 2, (i_Size / 2) - 1] = ePlayer.Black;
+            r_Board[(i_Size / 2) - 1, i_Size / 2] = ePlayer.Black;
         }
 
         public ePlayer this[int i_X, int i_Y]

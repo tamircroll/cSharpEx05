@@ -38,16 +38,16 @@
   <ItemGroup>
     <Compile Include="AutoPlay.cs" />
     <Compile Include="Board.cs" />
-    <Compile Include="Cell.cs">
+    <Compile Include="Forms\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controller.cs" />
-    <Compile Include="eNumOfPlayers.cs" />
-    <Compile Include="ePlayer.cs" />
-    <Compile Include="FormBoard.cs">
+    <Compile Include="enums\eNumOfPlayers.cs" />
+    <Compile Include="enums\ePlayer.cs" />
+    <Compile Include="Forms\FormBoard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGameOptions.cs">
+    <Compile Include="Forms\FormGameOptions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GameBoard.cs" />
