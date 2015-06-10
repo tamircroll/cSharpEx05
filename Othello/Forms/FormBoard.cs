@@ -29,7 +29,7 @@ namespace Othello
             m_Board.m_SetPossibleCell += PossibleMove;
             m_Board.m_SetCellEmpty += EmptyCell;
             m_Othello.m_GameOver += GameOver;
-//            m_Othello.m_TurnPlayed += SetTitle;
+            m_Othello.m_PlayerSwitched += SetTitle;
         }
 
         public void SetTitle()

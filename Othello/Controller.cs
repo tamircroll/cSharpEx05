@@ -24,11 +24,8 @@
 
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
             i_Othello.DoAfterTurn();
-
         }
 
-
-        
         public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
         {
             List<int[]> validateMoves = new List<int[]>();

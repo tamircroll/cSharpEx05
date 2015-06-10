@@ -5,11 +5,16 @@ using System.Windows.Forms;
 
 namespace Othello
 {
-//    public delegate void TurnPlayed(); //TODO: Rename!!
+    public delegate void PlayerSwitched();
+
     public delegate void GameOver();
 
     public class Othello
     {
+        public event PlayerSwitched m_PlayerSwitched;
+
+        public event GameOver m_GameOver;
+
         private Player m_PlayerWhite, m_PlayerBlack;
         private GameBoard m_Board;
         private int m_BoardSize;
@@ -17,9 +22,6 @@ namespace Othello
         private Player m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
         private int m_BlackWins = 0, m_WhiteWins = 0;
-//        public event TurnPlayed m_TurnPlayed;
-        public event GameOver m_GameOver;
-
 
         public void StartNewGame()
         {
@@ -27,21 +29,17 @@ namespace Othello
             formGameOptions.ShowDialog();
             m_BoardSize = formGameOptions.BoardSize;
             m_NumOfPlayers = formGameOptions.NumOfPlayers;
-//            if (m_NumOfPlayers == eNumOfPlayers.OnePlayer)
-//            {
-//                m_TurnPlayed += DoAfterTurn2;
-//            }
             startPlaying();
         }
 
         private void startPlaying()
         {
             bool exitGame = false;
+
             while (!exitGame)
             {
                 m_Board = new GameBoard(this, m_BoardSize);
                 setPlayers();
-                CurPlayer = m_PlayerWhite;
                 FormBoard m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
                 m_Board.InitFirstPieces();
                 m_FormBoard.ShowDialog();
@@ -62,11 +60,6 @@ namespace Othello
                 m_BlackWins++;
             }
         }
-
-//        public void DoAfterTurn()
-//        {
-//            m_TurnPlayed.Invoke();
-//        }
 
         private ePlayer setWinner()
         {
@@ -121,11 +114,13 @@ namespace Othello
         {
             m_PlayerWhite = new Player(ePlayer.White, m_Board);
             m_PlayerBlack = new Player(ePlayer.Black, m_Board);
+            CurPlayer = m_PlayerWhite;
         }
 
         public void SwitchCurPlayer()
         {
             CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
+            m_PlayerSwitched.Invoke();
         }
 
         public Player CurPlayer

@@ -23,7 +23,6 @@ namespace Othello
 
         public event SetCellEmpty m_SetCellEmpty;
 
-
         public GameBoard(Othello i_Othello, int i_Size)
         {
             m_Othello = i_Othello;
@@ -44,14 +43,11 @@ namespace Othello
 
         public void InitFirstPieces()
         {
-            m_Board[Size / 2, Size / 2] = ePlayer.White;
-            m_Board[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.White;
-            m_Board[Size / 2, (Size / 2) - 1] = ePlayer.Black;
-            m_Board[(Size / 2) - 1, Size / 2] = ePlayer.Black;
-            m_SetColor.Invoke(ePlayer.White, Size / 2, Size / 2);
-            m_SetColor.Invoke(ePlayer.White, (Size / 2) - 1, (Size / 2) - 1);
-            m_SetColor.Invoke(ePlayer.Black, Size / 2, (Size / 2) - 1);
-            m_SetColor.Invoke(ePlayer.Black, (Size / 2) - 1, Size / 2);
+            this[Size / 2, Size / 2] = ePlayer.White;
+            this[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.White;
+            this[Size / 2, (Size / 2) - 1] = ePlayer.Black;
+            this[(Size / 2) - 1, Size / 2] = ePlayer.Black;
+           
             SetPossibleMoves();
         }
 
@@ -106,8 +102,13 @@ namespace Othello
                     m_PlayerTwoScore++;
                 }
 
+                if (m_SetColor != null)
+                {
+                    m_SetColor.Invoke(value, i_Row, i_Col);
+                    
+                }
+
                 m_Board[i_Row, i_Col] = value;
-                m_SetColor.Invoke(m_Othello.CurPlayer.PlayerEnum, i_Row, i_Col);
             }
         }
 
