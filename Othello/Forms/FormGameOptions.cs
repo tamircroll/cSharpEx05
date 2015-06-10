@@ -82,6 +82,10 @@ namespace Othello
             {
                 m_BoardSize += 2;
             }
+            else
+            {
+                m_BoardSize = 6;
+            }
 
             ((Button)i_Sender).Text = string.Format("Board SIze {0}X{0} (click to increase)", BoardSize);
         }

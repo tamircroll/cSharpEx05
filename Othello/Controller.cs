@@ -4,10 +4,8 @@
 
     public class Controller
     {
-        public static void ExecutePlayMove(Othello i_Othello, int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
+        public static void ExecutePlayMove(OthelloGame i_Othello, int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
-            i_Board.PaintGray();
-
             for (int rowMoveDirection = -1; rowMoveDirection <= 1; rowMoveDirection++)
             {
                 for (int columnMoveDirection = -1; columnMoveDirection <= 1; columnMoveDirection++)
@@ -23,7 +21,7 @@
             }
 
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
-            i_Othello.DoAfterTurn();
+            i_Othello.AfterTurn();
         }
 
         public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)

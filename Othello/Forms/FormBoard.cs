@@ -12,29 +12,29 @@ namespace Othello
         private int m_NumOfCells;
         private GameBoard m_Board;
         private eNumOfPlayers m_NumOfPlayers;
-        private Othello m_Othello;
+        private OthelloGame m_Othello;
         private Cell[,] m_Cells;
 
-        public FormBoard(Othello i_Othello, FormGameOptions m_FormGameOptions, GameBoard i_Board)
+        public FormBoard(OthelloGame i_Othello, GameBoard i_Board)
         {
             m_Othello = i_Othello;
-            m_NumOfCells = m_FormGameOptions.BoardSize;
-            m_NumOfPlayers = m_FormGameOptions.NumOfPlayers;
+            m_NumOfCells = i_Board.Size;
+            m_NumOfPlayers = i_Othello.NumOfPlayers;
             m_Board = i_Board;
             setBordOptions();
             setCells();
-            SetTitle();
+            setTitle_PlayerSwitched();
 
-            m_Board.m_SetColor += SetCell;
-            m_Board.m_SetPossibleCell += PossibleMove;
-            m_Board.m_SetCellEmpty += EmptyCell;
-            m_Othello.m_GameOver += GameOver;
-            m_Othello.m_PlayerSwitched += SetTitle;
+            m_Board.m_ColoringCell += setCellColor_ColoringCell;
+            m_Board.m_SetPossibleCells += possibleMove_SetPossibleMoves;
+            m_Board.m_SetCellsEmpty += emptyCells_SetCellsEmpty;
+            m_Othello.m_GameOver += exitGame_GameOver;
+            m_Othello.m_PlayerSwitched += setTitle_PlayerSwitched;
         }
 
-        public void SetTitle()
+        private void setTitle_PlayerSwitched()
         {
-            Text = string.Format("Othello - {0}'s Player Turn", m_Othello.CurPlayer.PlayerEnum);
+            Text = string.Format("OthelloGame - {0}'s Player Turn", m_Othello.CurPlayer.PlayerEnum);
         }
 
         private void setCells()
@@ -57,11 +57,6 @@ namespace Othello
             Controller.ExecutePlayMove(m_Othello, cell.Row, cell.column, m_Othello.CurPlayer, m_Board);
         }
 
-        public Cell[,] Cells
-        {
-            get { return m_Cells; }
-        }
-
         private Cell CreateCell(int i_Row, int i_Column)
         {
             int cellWidthLocation = (i_Row * k_CellSize) + (i_Row * k_CellSpaces) + k_LengthFromBoarders;
@@ -77,11 +72,6 @@ namespace Othello
             return toReturn;
         }
 
-        public eNumOfPlayers NumOfPlayers
-        {
-            get { return m_NumOfPlayers; }
-        }
-
         private void setBordOptions()
         {
             m_Cells = new Cell[m_NumOfCells, m_NumOfCells];
@@ -91,14 +81,9 @@ namespace Othello
             StartPosition = FormStartPosition.CenterScreen;
         }
 
-        public void GameOver()
+        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
         {
-            Close();
-        }
-
-        public void SetCell(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
-        {
-            Cell cell = Cells[i_Row, i_column];
+            Cell cell = m_Cells[i_Row, i_column];
 
             cell.Player = i_Player;
             cell.BackColor = (i_Player == ePlayer.White) ? Color.White : Color.Black;
@@ -107,19 +92,19 @@ namespace Othello
             cell.Enabled = false;
         }
 
-        public void PossibleMove(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
+        private void possibleMove_SetPossibleMoves(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
         {
-            if (!(NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player == ePlayer.Black))
+            if (!(m_NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player == ePlayer.Black))
             {
-                Cell cell = Cells[i_Row, i_column];
+                Cell cell = m_Cells[i_Row, i_column];
                 cell.Enabled = true;
                 cell.BackColor = Color.Green;
             }
         }
 
-        public void EmptyCell() //TODO: Rename
+        private void emptyCells_SetCellsEmpty() //TODO: Rename
         {
-            foreach (Cell cell in Cells)
+            foreach (Cell cell in m_Cells)
             {
                 if (cell.Player == ePlayer.NoPlayer)
                 {
@@ -127,6 +112,11 @@ namespace Othello
                     cell.Enabled = false;
                 }
             }
+        }
+
+        public void exitGame_GameOver()
+        {
+            Close();
         }
     }
 }

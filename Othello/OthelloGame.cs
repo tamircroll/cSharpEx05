@@ -5,27 +5,26 @@ using System.Windows.Forms;
 
 namespace Othello
 {
-    public delegate void PlayerSwitched();
+    public delegate void PlayerSwitchedDelegate();
 
-    public delegate void GameOver();
+    public delegate void GameOverDelegate();
 
-    public class Othello
+    public class OthelloGame
     {
-        public event PlayerSwitched m_PlayerSwitched;
+        public event PlayerSwitchedDelegate m_PlayerSwitched;
 
-        public event GameOver m_GameOver;
+        public event GameOverDelegate m_GameOver;
 
         private Player m_PlayerWhite, m_PlayerBlack;
         private GameBoard m_Board;
         private int m_BoardSize;
-        private FormGameOptions formGameOptions;
         private Player m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
         private int m_BlackWins = 0, m_WhiteWins = 0;
 
         public void StartNewGame()
         {
-            formGameOptions = new FormGameOptions();
+            FormGameOptions formGameOptions = new FormGameOptions();
             formGameOptions.ShowDialog();
             m_BoardSize = formGameOptions.BoardSize;
             m_NumOfPlayers = formGameOptions.NumOfPlayers;
@@ -40,13 +39,18 @@ namespace Othello
             {
                 m_Board = new GameBoard(this, m_BoardSize);
                 setPlayers();
-                FormBoard m_FormBoard = new FormBoard(this, formGameOptions, m_Board);
+                FormBoard m_FormBoard = new FormBoard(this, m_Board);
                 m_Board.InitFirstPieces();
                 m_FormBoard.ShowDialog();
-                ePlayer winner = setWinner();
-                addOneToWinner(winner);
-                exitGame = toExitGame(winner);
+                exitGame = toExitGame();
             }
+        }
+
+        public bool toExitGame()
+        {
+            ePlayer winner = getWinner();
+            addOneToWinner(winner);
+            return !toPlayAgain(winner);
         }
 
         private void addOneToWinner(ePlayer i_Winner)
@@ -61,7 +65,7 @@ namespace Othello
             }
         }
 
-        private ePlayer setWinner()
+        private ePlayer getWinner()
         {
             ePlayer winner;
 
@@ -81,7 +85,7 @@ namespace Othello
             return winner;
         }
 
-        private bool toExitGame(ePlayer i_Winner)
+        private bool toPlayAgain(ePlayer i_Winner)
         {
             StringBuilder msg = new StringBuilder();
 
@@ -104,10 +108,10 @@ namespace Othello
 
             DialogResult toPlayAgain = MessageBox.Show(
                 msg.ToString(),
-                "Othello",
+                "OthelloGame",
                 MessageBoxButtons.YesNo);
 
-            return toPlayAgain == DialogResult.No;
+            return toPlayAgain == DialogResult.Yes;
         }
 
         private void setPlayers()
@@ -117,10 +121,50 @@ namespace Othello
             CurPlayer = m_PlayerWhite;
         }
 
-        public void SwitchCurPlayer()
+        public void OnPlayerSwitched()
         {
             CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
             m_PlayerSwitched.Invoke();
+        }
+
+        public void AfterTurn()
+        {
+            if (isGameOver())
+            {
+                OnGameOver();
+            }
+            else
+            {
+                m_Board.OnSetCellsEmpty();
+                OnPlayerSwitched();
+
+                if (NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer.PlayerEnum == ePlayer.Black)
+                {
+                    AutoPlay.ComputerPlay(this, m_Board);
+                }
+                else
+                {
+                    m_Board.SetPossibleMoves();
+                }
+            }
+        }
+
+        private void OnGameOver()
+        {
+            if (m_GameOver != null)
+            {
+                m_GameOver.Invoke();
+            }
+        }
+
+        public Player PlayerBlack
+        {
+            get { return m_PlayerBlack; }
+        }
+
+        public Player PlayerWhite
+        {
+            get { return m_PlayerWhite; }
         }
 
         public Player CurPlayer
@@ -132,45 +176,6 @@ namespace Othello
         public eNumOfPlayers NumOfPlayers
         {
             get { return m_NumOfPlayers; }
-        }
-
-        private void ComputerPlay()
-        {
-            if (CurPlayer.Equals(m_PlayerBlack))
-            {
-                List<int[]> allMoves = Controller.ListAllPossibleMoves(m_PlayerBlack, m_Board);
-                if (allMoves.Count > 0)
-                {
-                    int moveIndex = new Random().Next(allMoves.Count - 1);
-                    int[] chosenMove = allMoves[moveIndex];
-                    Controller.ExecutePlayMove(this, chosenMove[0], chosenMove[1], m_PlayerBlack, m_Board);
-                }
-                else
-                {
-                    DoAfterTurn();
-                }
-            }
-        }
-
-        public void DoAfterTurn() //TODO: rename
-        {
-            if (isGameOver())
-            {
-                m_GameOver.Invoke();
-            }
-            else
-            {
-                SwitchCurPlayer();
-
-                if (NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer.PlayerEnum == ePlayer.Black)
-                {
-                    ComputerPlay();
-                }
-                else
-                {
-                    m_Board.SetPossibleMoves();
-                }
-            }
         }
 
         private bool isGameOver()

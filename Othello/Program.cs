@@ -4,7 +4,7 @@
     {
         public static void Main()
         {
-            Othello othello = new Othello();
+            OthelloGame othello = new OthelloGame();
             othello.StartNewGame();
         }
     }

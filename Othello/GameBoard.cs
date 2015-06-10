@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace Othello
 {
-    public delegate void SetCellColor(ePlayer i_Player, int i_Row, int i_column);
+    public delegate void CellColorChangedDelegate(ePlayer i_Player, int i_Row, int i_column);
 
-    public delegate void SetCellPossibleMove(ePlayer i_Player, int i_Row, int i_column);
+    public delegate void SetCellPossibleMovesDelegate(ePlayer i_Player, int i_Row, int i_column);
     
-    public delegate void SetCellEmpty();
+    public delegate void ClearEmptyCellsDelegate();
     
     public class GameBoard
     {
         private readonly int r_Size;
         private ePlayer[,] m_Board;
         private DateTime? m_LastUpdate;
-        private int m_PlayerOneScore = 2, m_PlayerTwoScore = 2;
-        private Othello m_Othello;
+        private int m_PlayerOneScore = 0, m_PlayerTwoScore = 0;
+        private OthelloGame m_Othello;
 
-        public event SetCellColor m_SetColor;
+        public event CellColorChangedDelegate m_ColoringCell;
 
-        public event SetCellPossibleMove m_SetPossibleCell;
+        public event SetCellPossibleMovesDelegate m_SetPossibleCells;
 
-        public event SetCellEmpty m_SetCellEmpty;
+        public event ClearEmptyCellsDelegate m_SetCellsEmpty;
 
-        public GameBoard(Othello i_Othello, int i_Size)
+        public GameBoard(OthelloGame i_Othello, int i_Size)
         {
             m_Othello = i_Othello;
             r_Size = i_Size;
@@ -47,7 +47,7 @@ namespace Othello
             this[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.White;
             this[Size / 2, (Size / 2) - 1] = ePlayer.Black;
             this[(Size / 2) - 1, Size / 2] = ePlayer.Black;
-           
+
             SetPossibleMoves();
         }
 
@@ -57,19 +57,19 @@ namespace Othello
 
             if (possibles.Count != 0)
             {
-                setPossibleMove(possibles);
+                OnSetPossibleCells(possibles);
             }
             else
             {
-                m_Othello.DoAfterTurn();
+                m_Othello.AfterTurn();
             }
         }
 
-        private void setPossibleMove(List<int[]> possibles)
+        private void OnSetPossibleCells(List<int[]> possibles)
         {
             foreach (int[] possible in possibles)
             {
-                m_SetPossibleCell.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
+                m_SetPossibleCells.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
             }
         }
 
@@ -102,19 +102,24 @@ namespace Othello
                     m_PlayerTwoScore++;
                 }
 
-                if (m_SetColor != null)
-                {
-                    m_SetColor.Invoke(value, i_Row, i_Col);
-                    
-                }
+                OnColoringCell(i_Row, i_Col, value);
 
                 m_Board[i_Row, i_Col] = value;
             }
         }
 
-        public void PaintGray()
+        private void OnColoringCell(int i_Row, int i_Col, ePlayer value)
         {
-            m_SetCellEmpty.Invoke();
+            if (m_ColoringCell != null)
+            {
+                m_ColoringCell.Invoke(value, i_Row, i_Col);
+            }
+        }
+
+
+        public void OnSetCellsEmpty()
+        {
+            m_SetCellsEmpty.Invoke();
         }
 
         public DateTime? LastUpdate
