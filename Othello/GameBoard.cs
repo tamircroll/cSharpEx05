@@ -9,8 +9,6 @@ namespace Othello
     
     public delegate void SetCellEmpty();
     
-    public delegate void GameOver();
-
     public class GameBoard
     {
         private readonly int r_Size;
@@ -25,7 +23,6 @@ namespace Othello
 
         public event SetCellEmpty m_SetCellEmpty;
 
-        public event GameOver m_GameOver;
 
         public GameBoard(Othello i_Othello, int i_Size)
         {
@@ -62,19 +59,13 @@ namespace Othello
         {
             List<int[]> possibles = Controller.ListAllPossibleMoves(m_Othello.CurPlayer, this);
 
-            if (possibles.Count == 0)
-            {
-                m_Othello.SwitchCurPlayer();
-                possibles = Controller.ListAllPossibleMoves(m_Othello.CurPlayer, this);
-            }
-
             if (possibles.Count != 0)
             {
                 setPossibleMove(possibles);
             }
             else
             {
-                m_GameOver.Invoke();
+                m_Othello.DoAfterTurn();
             }
         }
 

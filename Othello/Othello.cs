@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
 namespace Othello
 {
-    public delegate void TurnPlayed(); //TODO: Rename!!
+//    public delegate void TurnPlayed(); //TODO: Rename!!
+    public delegate void GameOver();
 
     public class Othello
     {
@@ -15,7 +17,9 @@ namespace Othello
         private Player m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
         private int m_BlackWins = 0, m_WhiteWins = 0;
-        public event TurnPlayed m_TurnPlayed;
+//        public event TurnPlayed m_TurnPlayed;
+        public event GameOver m_GameOver;
+
 
         public void StartNewGame()
         {
@@ -23,6 +27,10 @@ namespace Othello
             formGameOptions.ShowDialog();
             m_BoardSize = formGameOptions.BoardSize;
             m_NumOfPlayers = formGameOptions.NumOfPlayers;
+//            if (m_NumOfPlayers == eNumOfPlayers.OnePlayer)
+//            {
+//                m_TurnPlayed += DoAfterTurn2;
+//            }
             startPlaying();
         }
 
@@ -55,10 +63,10 @@ namespace Othello
             }
         }
 
-        public void DoAfterTurn()
-        {
-            m_TurnPlayed.Invoke();
-        }
+//        public void DoAfterTurn()
+//        {
+//            m_TurnPlayed.Invoke();
+//        }
 
         private ePlayer setWinner()
         {
@@ -129,6 +137,60 @@ namespace Othello
         public eNumOfPlayers NumOfPlayers
         {
             get { return m_NumOfPlayers; }
+        }
+
+        private void ComputerPlay()
+        {
+            if (CurPlayer.Equals(m_PlayerBlack))
+            {
+                List<int[]> allMoves = Controller.ListAllPossibleMoves(m_PlayerBlack, m_Board);
+                if (allMoves.Count > 0)
+                {
+                    int moveIndex = new Random().Next(allMoves.Count - 1);
+                    int[] chosenMove = allMoves[moveIndex];
+                    Controller.ExecutePlayMove(this, chosenMove[0], chosenMove[1], m_PlayerBlack, m_Board);
+                }
+                else
+                {
+                    DoAfterTurn();
+                }
+            }
+        }
+
+        public void DoAfterTurn() //TODO: rename
+        {
+            if (isGameOver())
+            {
+                m_GameOver.Invoke();
+            }
+            else
+            {
+                SwitchCurPlayer();
+
+                if (NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer.PlayerEnum == ePlayer.Black)
+                {
+                    ComputerPlay();
+                }
+                else
+                {
+                    m_Board.SetPossibleMoves();
+                }
+            }
+        }
+
+        private bool isGameOver()
+        {
+            bool isGameOver = false;
+
+            List<int[]> whitePlayerPossibles = Controller.ListAllPossibleMoves(m_PlayerWhite, m_Board);
+            List<int[]> blackPlayerPossibles = Controller.ListAllPossibleMoves(m_PlayerBlack, m_Board);
+
+            if (whitePlayerPossibles.Count == 0 && blackPlayerPossibles.Count == 0)
+            {
+                isGameOver = true;
+            }
+
+            return isGameOver;
         }
     }
 }

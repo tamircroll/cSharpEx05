@@ -28,8 +28,8 @@ namespace Othello
             m_Board.m_SetColor += SetCell;
             m_Board.m_SetPossibleCell += PossibleMove;
             m_Board.m_SetCellEmpty += EmptyCell;
-            m_Board.m_GameOver += GameOver;
-            m_Othello.m_TurnPlayed += SetTitle;
+            m_Othello.m_GameOver += GameOver;
+//            m_Othello.m_TurnPlayed += SetTitle;
         }
 
         public void SetTitle()
@@ -109,7 +109,7 @@ namespace Othello
 
         public void PossibleMove(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
         {
-            if (!(NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player != ePlayer.Black))
+            if (!(NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player == ePlayer.Black))
             {
                 Cell cell = Cells[i_Row, i_column];
                 cell.Enabled = true;
