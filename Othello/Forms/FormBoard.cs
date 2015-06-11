@@ -54,7 +54,7 @@ namespace Othello
         private void ExecuteMove(object i_Sender, EventArgs i_E)
         {
             Cell cell = i_Sender as Cell;
-            Controller.ExecutePlayMove(m_Othello, cell.Row, cell.column, m_Othello.CurPlayer, m_Board);
+            m_Othello.PlayTurn(cell.Row, cell.column);
         }
 
         private Cell CreateCell(int i_Row, int i_Column)

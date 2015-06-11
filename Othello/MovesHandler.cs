@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public class Controller
+    public class MovesHandler
     {
-        public static void ExecutePlayMove(OthelloGame i_Othello, int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
+        public static void ExecutePlayMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
         {
             for (int rowMoveDirection = -1; rowMoveDirection <= 1; rowMoveDirection++)
             {
@@ -21,7 +21,6 @@
             }
 
             i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
-            i_Othello.AfterTurn();
         }
 
         public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)

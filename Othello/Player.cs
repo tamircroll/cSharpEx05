@@ -15,7 +15,7 @@ namespace Othello
             r_PlayerEnum = i_PlayerEnum;
             m_LastUpdateBoard = i_Board.LastUpdate;
             m_ValidateMoves = new List<int[]>();
-            m_ValidateMoves = Controller.ListAllPossibleMoves(this, i_Board);
+            m_ValidateMoves = MovesHandler.ListAllPossibleMoves(this, i_Board);
         }
 
         public ePlayer PlayerEnum

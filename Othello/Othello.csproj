@@ -41,7 +41,7 @@
     <Compile Include="Forms\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controller.cs" />
+    <Compile Include="MovesHandler.cs" />
     <Compile Include="enums\eNumOfPlayers.cs" />
     <Compile Include="enums\ePlayer.cs" />
     <Compile Include="Forms\FormBoard.cs">

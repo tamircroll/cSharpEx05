@@ -53,7 +53,7 @@ namespace Othello
 
         public void SetPossibleMoves()
         {
-            List<int[]> possibles = Controller.ListAllPossibleMoves(m_Othello.CurPlayer, this);
+            List<int[]> possibles = MovesHandler.ListAllPossibleMoves(m_Othello.CurPlayer, this);
 
             if (possibles.Count != 0)
             {

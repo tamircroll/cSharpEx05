@@ -46,6 +46,12 @@ namespace Othello
             }
         }
 
+        public void PlayTurn(int i_Row, int i_Column)
+        {
+            MovesHandler.ExecutePlayMove(i_Row, i_Column, CurPlayer, m_Board);
+            AfterTurn();
+        }
+
         public bool toExitGame()
         {
             ePlayer winner = getWinner();
@@ -121,12 +127,6 @@ namespace Othello
             CurPlayer = m_PlayerWhite;
         }
 
-        public void OnPlayerSwitched()
-        {
-            CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
-            m_PlayerSwitched.Invoke();
-        }
-
         public void AfterTurn()
         {
             if (isGameOver())
@@ -149,12 +149,33 @@ namespace Othello
             }
         }
 
+        private void OnPlayerSwitched()
+        {
+            CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
+            m_PlayerSwitched.Invoke();
+        }
+
         private void OnGameOver()
         {
             if (m_GameOver != null)
             {
                 m_GameOver.Invoke();
             }
+        }
+
+        private bool isGameOver()
+        {
+            bool isGameOver = false;
+
+            List<int[]> whitePlayerPossibles = MovesHandler.ListAllPossibleMoves(m_PlayerWhite, m_Board);
+            List<int[]> blackPlayerPossibles = MovesHandler.ListAllPossibleMoves(m_PlayerBlack, m_Board);
+
+            if (whitePlayerPossibles.Count == 0 && blackPlayerPossibles.Count == 0)
+            {
+                isGameOver = true;
+            }
+
+            return isGameOver;
         }
 
         public Player PlayerBlack
@@ -176,21 +197,6 @@ namespace Othello
         public eNumOfPlayers NumOfPlayers
         {
             get { return m_NumOfPlayers; }
-        }
-
-        private bool isGameOver()
-        {
-            bool isGameOver = false;
-
-            List<int[]> whitePlayerPossibles = Controller.ListAllPossibleMoves(m_PlayerWhite, m_Board);
-            List<int[]> blackPlayerPossibles = Controller.ListAllPossibleMoves(m_PlayerBlack, m_Board);
-
-            if (whitePlayerPossibles.Count == 0 && blackPlayerPossibles.Count == 0)
-            {
-                isGameOver = true;
-            }
-
-            return isGameOver;
         }
     }
 }
