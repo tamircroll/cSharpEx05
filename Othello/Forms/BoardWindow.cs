@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Othello
 {
-    public class FormBoard : Form
+    public class BoardWindow : Form
     {
         private const int k_LengthFromBoarders = 15;
         private const int k_CellSize = 70;
@@ -15,7 +15,7 @@ namespace Othello
         private OthelloGame m_Othello;
         private Cell[,] m_Cells;
 
-        public FormBoard(OthelloGame i_Othello, GameBoard i_Board)
+        public BoardWindow(OthelloGame i_Othello, GameBoard i_Board)
         {
             m_Othello = i_Othello;
             m_NumOfCells = i_Board.Size;
@@ -81,7 +81,7 @@ namespace Othello
             StartPosition = FormStartPosition.CenterScreen;
         }
 
-        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
+        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_column)
         {
             Cell cell = m_Cells[i_Row, i_column];
 
@@ -92,7 +92,7 @@ namespace Othello
             cell.Enabled = false;
         }
 
-        private void possibleMove_SetPossibleMoves(ePlayer i_Player, int i_Row, int i_column) //TODO: Rename
+        private void possibleMove_SetPossibleMoves(ePlayer i_Player, int i_Row, int i_column)
         {
             if (!(m_NumOfPlayers == eNumOfPlayers.OnePlayer && i_Player == ePlayer.Black))
             {
@@ -102,7 +102,7 @@ namespace Othello
             }
         }
 
-        private void emptyCells_SetCellsEmpty() //TODO: Rename
+        private void emptyCells_SetCellsEmpty()
         {
             foreach (Cell cell in m_Cells)
             {

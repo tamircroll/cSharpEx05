@@ -44,7 +44,7 @@
     <Compile Include="MovesHandler.cs" />
     <Compile Include="enums\eNumOfPlayers.cs" />
     <Compile Include="enums\ePlayer.cs" />
-    <Compile Include="Forms\FormBoard.cs">
+    <Compile Include="Forms\BoardWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormGameOptions.cs">

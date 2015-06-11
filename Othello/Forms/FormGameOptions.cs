@@ -55,7 +55,7 @@ namespace Othello
             m_ButtonEncreaseSize.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 10);
             m_ButtonEncreaseSize.Width = ClientSize.Width - (2 * k_LengthFromSideBoarder);
             m_ButtonEncreaseSize.Height = m_ButtonHight;
-            m_ButtonEncreaseSize.Click += increaseBoardSizeByTwo;
+            m_ButtonEncreaseSize.Click += buttonIncreaseBoardSizeByTwo_Click;
         }
 
         private void initOnePlayerButton()
@@ -64,7 +64,7 @@ namespace Othello
             m_ButtonOnePlayer.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 2);
             m_ButtonOnePlayer.Width = (m_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
             m_ButtonOnePlayer.Height = m_ButtonHight;
-            m_ButtonOnePlayer.Click += onePlayerButton_Click;
+            m_ButtonOnePlayer.Click += buttonOnePlayer_Click;
         }
 
         private void initTwoPlayerButton()
@@ -73,10 +73,10 @@ namespace Othello
             m_ButtonTwoPlayer.Location = new Point((2 * k_LengthFromSideBoarder) + m_ButtonOnePlayer.Width, ClientSize.Height / 2);
             m_ButtonTwoPlayer.Width = (m_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
             m_ButtonTwoPlayer.Height = m_ButtonHight;
-            m_ButtonTwoPlayer.Click += twoPlayerButton_Click;
+            m_ButtonTwoPlayer.Click += buttonTwoPlayers_Click;
         }
 
-        private void increaseBoardSizeByTwo(object i_Sender, EventArgs i_E) //TODO: Change name
+        private void buttonIncreaseBoardSizeByTwo_Click(object i_Sender, EventArgs i_E)
         {
             if (m_BoardSize < 12)
             {
@@ -90,13 +90,13 @@ namespace Othello
             ((Button)i_Sender).Text = string.Format("Board SIze {0}X{0} (click to increase)", BoardSize);
         }
 
-        private void onePlayerButton_Click(object i_Sender, EventArgs i_E) //TODO: Change name
+        private void buttonOnePlayer_Click(object i_Sender, EventArgs i_E)
         {
             m_NumOfPlayers = eNumOfPlayers.OnePlayer;
             Close();
         }
 
-        private void twoPlayerButton_Click(object i_Sender, EventArgs i_E) //TODO: Change name
+        private void buttonTwoPlayers_Click(object i_Sender, EventArgs i_E)
         {
             m_NumOfPlayers = eNumOfPlayers.TwoPlayers;
             Close();

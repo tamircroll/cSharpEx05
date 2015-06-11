@@ -39,9 +39,9 @@ namespace Othello
             {
                 m_Board = new GameBoard(this, m_BoardSize);
                 setPlayers();
-                FormBoard m_FormBoard = new FormBoard(this, m_Board);
+                BoardWindow m_BoardWindow = new BoardWindow(this, m_Board);
                 m_Board.InitFirstPieces();
-                m_FormBoard.ShowDialog();
+                m_BoardWindow.ShowDialog();
                 exitGame = toExitGame();
             }
         }
@@ -136,7 +136,7 @@ namespace Othello
             else
             {
                 m_Board.OnSetCellsEmpty();
-                OnPlayerSwitched();
+                switchedPlayer();
 
                 if (NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer.PlayerEnum == ePlayer.Black)
                 {
@@ -149,13 +149,18 @@ namespace Othello
             }
         }
 
-        private void OnPlayerSwitched()
+        private void switchedPlayer()
         {
             CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
+            OnPlayerSwitched();
+        }
+
+        protected virtual void OnPlayerSwitched()
+        {
             m_PlayerSwitched.Invoke();
         }
 
-        private void OnGameOver()
+        protected virtual void OnGameOver()
         {
             if (m_GameOver != null)
             {

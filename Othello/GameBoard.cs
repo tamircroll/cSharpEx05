@@ -116,7 +116,6 @@ namespace Othello
             }
         }
 
-
         public void OnSetCellsEmpty()
         {
             m_SetCellsEmpty.Invoke();
