@@ -29,6 +29,7 @@ namespace Othello
             r_Size = i_Size;
             m_Board = new ePlayer[r_Size, r_Size];
             m_LastUpdate = DateTime.Now;
+            InitFirstPieces();
         }
 
         public int PlayerOneScore
@@ -47,8 +48,6 @@ namespace Othello
             this[(Size / 2) - 1, (Size / 2) - 1] = ePlayer.White;
             this[Size / 2, (Size / 2) - 1] = ePlayer.Black;
             this[(Size / 2) - 1, Size / 2] = ePlayer.Black;
-
-            SetPossibleMoves();
         }
 
         public void SetPossibleMoves()
@@ -69,7 +68,8 @@ namespace Othello
         {
             foreach (int[] possible in possibles)
             {
-                m_SetPossibleCells.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
+                if (m_SetPossibleCells != null)
+                    m_SetPossibleCells.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
             }
         }
 

@@ -39,9 +39,7 @@ namespace Othello
             {
                 m_Board = new GameBoard(this, m_BoardSize);
                 setPlayers();
-                BoardWindow m_BoardWindow = new BoardWindow(this, m_Board);
-                m_Board.InitFirstPieces();
-                m_BoardWindow.ShowDialog();
+                new BoardWindow(this, m_Board).ShowDialog();
                 exitGame = toExitGame();
             }
         }

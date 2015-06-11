@@ -30,6 +30,7 @@ namespace Othello
             m_Board.m_SetCellsEmpty += emptyCells_SetCellsEmpty;
             m_Othello.m_GameOver += exitGame_GameOver;
             m_Othello.m_PlayerSwitched += setTitle_PlayerSwitched;
+            m_Board.SetPossibleMoves();
         }
 
         private void setTitle_PlayerSwitched()
@@ -43,21 +44,25 @@ namespace Othello
             {
                 for (int j = 0; j < m_NumOfCells; j++)
                 {
-                    m_Cells[i, j] = CreateCell(i, j);
+                    m_Cells[i, j] = createEmptyCell(i, j);
+                    if (m_Board[i, j] != ePlayer.NoPlayer)
+                    {
+                        setCellColor_ColoringCell(m_Board[i, j], i, j);
+                    }
+                    
                     Controls.Add(m_Cells[i, j]);
-
-                    m_Cells[i, j].Click += ExecuteMove;
+                    m_Cells[i, j].Click += executeMove;
                 }
             }
         }
 
-        private void ExecuteMove(object i_Sender, EventArgs i_E)
+        private void executeMove(object i_Sender, EventArgs i_E)
         {
             Cell cell = i_Sender as Cell;
             m_Othello.PlayTurn(cell.Row, cell.column);
         }
 
-        private Cell CreateCell(int i_Row, int i_Column)
+        private Cell createEmptyCell(int i_Row, int i_Column)
         {
             int cellWidthLocation = (i_Row * k_CellSize) + (i_Row * k_CellSpaces) + k_LengthFromBoarders;
             int cellHightLocation = (i_Column * k_CellSize) + (i_Column * k_CellSpaces) + k_LengthFromBoarders;
@@ -68,6 +73,8 @@ namespace Othello
             toReturn.Width = k_CellSize;
             toReturn.Location = new Point(cellWidthLocation, cellHightLocation);
             toReturn.Enabled = false;
+
+            
 
             return toReturn;
         }
@@ -81,9 +88,9 @@ namespace Othello
             StartPosition = FormStartPosition.CenterScreen;
         }
 
-        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_column)
+        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_Column)
         {
-            Cell cell = m_Cells[i_Row, i_column];
+            Cell cell = m_Cells[i_Row, i_Column];
 
             cell.Player = i_Player;
             cell.BackColor = (i_Player == ePlayer.White) ? Color.White : Color.Black;
