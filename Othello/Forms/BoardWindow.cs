@@ -7,8 +7,8 @@ namespace Othello
     public class BoardWindow : Form
     {
         private const int k_LengthFromBoarders = 15;
-        private const int k_CellSize = 70;
-        private const int k_CellSpaces = 1;
+        private const int k_CellSize = 50;
+        private const int k_CellSpaces = 2;
         private int m_NumOfCells;
         private GameBoard m_Board;
         private eNumOfPlayers m_NumOfPlayers;
@@ -25,7 +25,7 @@ namespace Othello
             setCells();
             setTitle_PlayerSwitched();
 
-            m_Board.m_ColoringCell += setCellColor_ColoringCell;
+            m_Board.m_ColoringCell += setCellColor_CellColored;
             m_Board.m_SetPossibleCells += possibleMove_SetPossibleMoves;
             m_Board.m_SetCellsEmpty += emptyCells_SetCellsEmpty;
             m_Othello.m_GameOver += exitGame_GameOver;
@@ -47,7 +47,7 @@ namespace Othello
                     m_Cells[i, j] = createEmptyCell(i, j);
                     if (m_Board[i, j] != ePlayer.NoPlayer)
                     {
-                        setCellColor_ColoringCell(m_Board[i, j], i, j);
+                        setCellColor_CellColored(m_Board[i, j], i, j);
                     }
                     
                     Controls.Add(m_Cells[i, j]);
@@ -64,17 +64,15 @@ namespace Othello
 
         private Cell createEmptyCell(int i_Row, int i_Column)
         {
-            int cellWidthLocation = (i_Row * k_CellSize) + (i_Row * k_CellSpaces) + k_LengthFromBoarders;
-            int cellHightLocation = (i_Column * k_CellSize) + (i_Column * k_CellSpaces) + k_LengthFromBoarders;
+            int cellWidthLocation = (i_Row*k_CellSize) + (i_Row*k_CellSpaces) + k_LengthFromBoarders;
+            int cellHightLocation = (i_Column*k_CellSize) + (i_Column*k_CellSpaces) + k_LengthFromBoarders;
             Cell toReturn = new Cell(i_Row, i_Column);
-            toReturn.BackColor = Color.LightGray;
 
+            toReturn.BackColor = Color.LightGray;
             toReturn.Height = k_CellSize;
             toReturn.Width = k_CellSize;
             toReturn.Location = new Point(cellWidthLocation, cellHightLocation);
             toReturn.Enabled = false;
-
-            
 
             return toReturn;
         }
@@ -88,7 +86,7 @@ namespace Othello
             StartPosition = FormStartPosition.CenterScreen;
         }
 
-        private void setCellColor_ColoringCell(ePlayer i_Player, int i_Row, int i_Column)
+        private void setCellColor_CellColored(ePlayer i_Player, int i_Row, int i_Column)
         {
             Cell cell = m_Cells[i_Row, i_Column];
 
@@ -105,7 +103,7 @@ namespace Othello
             {
                 Cell cell = m_Cells[i_Row, i_column];
                 cell.Enabled = true;
-                cell.BackColor = Color.Green;
+                cell.BackColor = Color.LawnGreen;
             }
         }
 
