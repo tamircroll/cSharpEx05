@@ -1,4 +1,5 @@
 ﻿using System;
+using Othello.enums;
 
 namespace Othello
 {
@@ -7,15 +8,12 @@ namespace Othello
     public struct Player
     {
         private readonly ePlayer r_PlayerEnum;
-        private DateTime? m_LastUpdateBoard;
-        private List<int[]> m_ValidateMoves;
 
-        public Player(ePlayer i_PlayerEnum, GameBoard i_Board)
+        public Player(ePlayer i_PlayerEnum)
         {
             r_PlayerEnum = i_PlayerEnum;
-            m_LastUpdateBoard = i_Board.LastUpdate;
-            m_ValidateMoves = new List<int[]>();
-            m_ValidateMoves = MovesHandler.ListAllPossibleMoves(this, i_Board);
+            new List<int[]>();
+//            MovesHandler.ListAllPossibleMoves(r_PlayerEnum, i_Board);
         }
 
         public ePlayer PlayerEnum

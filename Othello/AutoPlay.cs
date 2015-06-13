@@ -9,7 +9,7 @@ namespace Othello
         {
             if (i_Othello.CurPlayer.Equals(i_Othello.PlayerBlack))
             {
-                List<int[]> allMoves = MovesHandler.ListAllPossibleMoves(i_Othello.PlayerBlack, i_Board);
+                List<int[]> allMoves = MovesHandler.ListAllPossibleMoves(i_Othello.PlayerBlack.PlayerEnum, i_Board);
                 if (allMoves.Count > 0)
                 {
                     int moveIndex = new Random().Next(allMoves.Count - 1);

@@ -1,7 +1,5 @@
-﻿namespace Othello
+﻿namespace Othello.enums
 {
-    using System;
-
     public enum eNumOfPlayers : byte
     {
         OnePlayer = 1,

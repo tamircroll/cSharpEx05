@@ -1,45 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Othello.enums;
 
 namespace Othello
 {
     public delegate void CellColorChangedDelegate(ePlayer i_Player, int i_Row, int i_column);
 
-    public delegate void SetCellPossibleMovesDelegate(ePlayer i_Player, int i_Row, int i_column);
-    
-    public delegate void ClearEmptyCellsDelegate();
-    
     public class GameBoard
     {
-        private readonly int r_Size;
-        private ePlayer[,] m_Board;
-        private DateTime? m_LastUpdate;
-        private int m_PlayerOneScore = 0, m_PlayerTwoScore = 0;
-        private OthelloGame m_Othello;
-
         public event CellColorChangedDelegate m_ColoringCell;
-
-        public event SetCellPossibleMovesDelegate m_SetPossibleCells;
-
-        public event ClearEmptyCellsDelegate m_SetCellsEmpty;
+        
+        private readonly int r_Size;
+        private readonly OthelloGame r_Othello;
+        private ePlayer[,] m_Board;
+        private int m_PlayerOneScore = 0, m_PlayerTwoScore = 0;
+        private List<int[]> m_PossibleMoves;
 
         public GameBoard(OthelloGame i_Othello, int i_Size)
         {
-            m_Othello = i_Othello;
+            r_Othello = i_Othello;
             r_Size = i_Size;
             m_Board = new ePlayer[r_Size, r_Size];
-            m_LastUpdate = DateTime.Now;
             InitFirstPieces();
+            SetPossibleMoves();
         }
 
-        public int PlayerOneScore
+        public ePlayer this[int i_Row, int i_Col]
         {
-            get { return m_PlayerOneScore; }
-        }
+            get { return m_Board[i_Row, i_Col]; }
 
-        public int PlayerTwoScore
-        {
-            get { return m_PlayerTwoScore; }
+            set
+            {
+                if (value != ePlayer.PossibleMove && value != ePlayer.NoPlayer)
+                {
+                    calcScore(i_Row, i_Col, value);
+                }
+
+                m_Board[i_Row, i_Col] = value;
+                OnColoringCell(i_Row, i_Col, value);
+            }
         }
 
         public void InitFirstPieces()
@@ -52,59 +50,32 @@ namespace Othello
 
         public void SetPossibleMoves()
         {
-            List<int[]> possibles = MovesHandler.ListAllPossibleMoves(m_Othello.CurPlayer, this);
-
-            if (possibles.Count != 0)
+             m_PossibleMoves = MovesHandler.ListAllPossibleMoves(r_Othello.CurPlayer.PlayerEnum, this);
+             foreach (int[] possible in m_PossibleMoves)
             {
-                OnSetPossibleCells(possibles);
-            }
-            else
-            {
-                m_Othello.AfterTurn();
+                this[possible[0], possible[1]] = ePlayer.PossibleMove;
             }
         }
 
-        private void OnSetPossibleCells(List<int[]> possibles)
+        private void calcScore(int i_Row, int i_Col, ePlayer value)
         {
-            foreach (int[] possible in possibles)
+            if (value == ePlayer.White && m_Board[i_Row, i_Col] == ePlayer.Black)
             {
-                if (m_SetPossibleCells != null)
-                    m_SetPossibleCells.Invoke(m_Othello.CurPlayer.PlayerEnum, possible[0], possible[1]);
+                m_PlayerOneScore++;
+                m_PlayerTwoScore--;
             }
-        }
-
-        public ePlayer this[int i_Row, int i_Col]
-        {
-            get
+            else if (value == ePlayer.Black && m_Board[i_Row, i_Col] == ePlayer.White)
             {
-                return m_Board[i_Row, i_Col];
+                m_PlayerOneScore--;
+                m_PlayerTwoScore++;
             }
-
-            set
+            else if (value == ePlayer.White && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
             {
-                m_LastUpdate = DateTime.Now;
-                if (value == ePlayer.White && m_Board[i_Row, i_Col] == ePlayer.Black)
-                {
-                    m_PlayerOneScore++;
-                    m_PlayerTwoScore--;
-                }
-                else if (value == ePlayer.Black && m_Board[i_Row, i_Col] == ePlayer.White)
-                {
-                    m_PlayerOneScore--;
-                    m_PlayerTwoScore++;
-                }
-                else if (value == ePlayer.White && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
-                {
-                    m_PlayerOneScore++;
-                }
-                else if (value == ePlayer.Black && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
-                {
-                    m_PlayerTwoScore++;
-                }
-
-                OnColoringCell(i_Row, i_Col, value);
-
-                m_Board[i_Row, i_Col] = value;
+                m_PlayerOneScore++;
+            }
+            else if (value == ePlayer.Black && m_Board[i_Row, i_Col] == ePlayer.NoPlayer)
+            {
+                m_PlayerTwoScore++;
             }
         }
 
@@ -116,19 +87,19 @@ namespace Othello
             }
         }
 
-        public void OnSetCellsEmpty()
-        {
-            m_SetCellsEmpty.Invoke();
-        }
-
-        public DateTime? LastUpdate
-        {
-            get { return m_LastUpdate; }
-        }
-
         public int Size
         {
             get { return r_Size; }
+        }
+
+        public int PlayerOneScore
+        {
+            get { return m_PlayerOneScore; }
+        }
+
+        public int PlayerTwoScore
+        {
+            get { return m_PlayerTwoScore; }
         }
 
         public ePlayer[,] Board
@@ -140,6 +111,19 @@ namespace Othello
         public int GetScore(ePlayer i_Player)
         {
             return i_Player == ePlayer.White ? m_PlayerOneScore : m_PlayerTwoScore;
+        }
+
+        public void RemovePosibleMoves()
+        {
+            foreach (int[] possible in m_PossibleMoves)
+            {
+                {
+                    if (this[possible[0], possible[1]] == ePlayer.PossibleMove)
+                    {
+                        this[possible[0], possible[1]] = ePlayer.NoPlayer;
+                    }
+                }
+            }
         }
     }
 }

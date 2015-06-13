@@ -1,4 +1,4 @@
-﻿namespace Othello
+﻿namespace Othello.enums
 {
     public enum ePlayer : byte
     {

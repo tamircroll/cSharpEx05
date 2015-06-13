@@ -1,10 +1,12 @@
-﻿namespace Othello
+﻿using Othello.enums;
+
+namespace Othello
 {
     using System.Collections.Generic;
 
     public class MovesHandler
     {
-        public static void ExecutePlayMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
+        public static void ExecutePlayMove(int i_Row, int i_Column, ePlayer i_Player, GameBoard i_Board)
         {
             for (int rowMoveDirection = -1; rowMoveDirection <= 1; rowMoveDirection++)
             {
@@ -14,16 +16,17 @@
                     {
                         if (canEat(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player, i_Board))
                         {
-                            eatPiecesInDirection(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player, i_Board);
+                            eatPiecesInDirection(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player,
+                                i_Board);
                         }
                     }
                 }
             }
 
-            i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
+            i_Board[i_Row, i_Column] = i_Player;
         }
 
-        public static List<int[]> ListAllPossibleMoves(Player i_Player, GameBoard i_Board)
+        public static List<int[]> ListAllPossibleMoves(ePlayer i_Player, GameBoard i_Board)
         {
             List<int[]> validateMoves = new List<int[]>();
 
@@ -33,9 +36,9 @@
                 {
                     bool validMove = IsValidMove(row, column, i_Player, i_Board);
 
-                    if(validMove)
+                    if (validMove)
                     {
-                        validateMoves.Add(new[] { row, column });
+                        validateMoves.Add(new[] {row, column});
                     }
                 }
             }
@@ -43,23 +46,24 @@
             return validateMoves;
         }
 
-        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn, Player i_Player, GameBoard i_Board)
+        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn,
+            ePlayer i_Player, GameBoard i_Board)
         {
             do
             {
                 i_Row += i_moveRow;
                 i_Column += i_MoveColumn;
-                i_Board[i_Row, i_Column] = i_Player.PlayerEnum;
-            }
-            while (i_Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player.PlayerEnum);
+                i_Board[i_Row, i_Column] = i_Player;
+            } while (i_Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player);
         }
 
-        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, Player i_Player, GameBoard i_Board)
+        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, ePlayer i_Player,
+            GameBoard i_Board)
         {
             int numOfPiecesToEat = 0;
             bool canEat = false;
 
-            if (i_Board[i_Row, i_Column] == ePlayer.NoPlayer)
+            if (i_Board[i_Row, i_Column] == ePlayer.NoPlayer || i_Board[i_Row, i_Column] == ePlayer.PossibleMove)
             {
                 do
                 {
@@ -71,21 +75,20 @@
                         break;
                     }
 
-                    if (i_Board[i_Row, i_Column] == i_Player.PlayerEnum)
+                    if (i_Board[i_Row, i_Column] == i_Player)
                     {
                         canEat = numOfPiecesToEat > 0;
                         break;
                     }
 
                     numOfPiecesToEat++;
-                }
-                while (i_Board[i_Row, i_Column] != ePlayer.NoPlayer);
+                } while (i_Board[i_Row, i_Column] != ePlayer.NoPlayer);
             }
 
             return canEat;
         }
 
-        private static bool IsValidMove(int i_Row, int i_Column, Player i_Player, GameBoard i_Board)
+        private static bool IsValidMove(int i_Row, int i_Column, ePlayer i_Player, GameBoard i_Board)
         {
             bool validMove = false;
 
