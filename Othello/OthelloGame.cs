@@ -7,13 +7,13 @@ namespace Othello
 {
     public delegate void PlayerSwitchedDelegate();
 
-    public delegate void GameOverDelegate();
+    public delegate void GameOverEventHandler();
 
     public class OthelloGame
     {
         public event PlayerSwitchedDelegate m_PlayerSwitched;
 
-        public event GameOverDelegate m_GameOver;
+        public event GameOverEventHandler m_GameOver;
 
         private Player m_PlayerWhite, m_PlayerBlack;
         private GameBoard m_Board;
@@ -39,7 +39,7 @@ namespace Othello
             {
                 m_Board = new GameBoard(this, m_BoardSize);
                 setPlayers();
-                new BoardWindow(this, m_Board).ShowDialog();
+                new BoardWindow(this,m_Board);
                 exitGame = toExitGame();
             }
         }

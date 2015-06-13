@@ -7,8 +7,8 @@ namespace Othello
     public class BoardWindow : Form
     {
         private const int k_LengthFromBoarders = 15;
-        private const int k_CellSize = 50;
-        private const int k_CellSpaces = 2;
+        private const int k_CellSize = 45;
+        private const int k_CellSpaces = 3;
         private int m_NumOfCells;
         private GameBoard m_Board;
         private eNumOfPlayers m_NumOfPlayers;
@@ -31,6 +31,7 @@ namespace Othello
             m_Othello.m_GameOver += exitGame_GameOver;
             m_Othello.m_PlayerSwitched += setTitle_PlayerSwitched;
             m_Board.SetPossibleMoves();
+            ShowDialog();
         }
 
         private void setTitle_PlayerSwitched()

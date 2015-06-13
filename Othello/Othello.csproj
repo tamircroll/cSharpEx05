@@ -37,7 +37,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AutoPlay.cs" />
-    <Compile Include="Board.cs" />
     <Compile Include="Forms\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
