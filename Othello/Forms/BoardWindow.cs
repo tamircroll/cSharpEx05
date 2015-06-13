@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 using Othello.enums;
 
-namespace Othello
+namespace Othello.Forms
 {
     public class BoardWindow : Form
     {
@@ -31,7 +31,7 @@ namespace Othello
 
         private void setTitle_PlayerSwitched()
         {
-            Text = string.Format("OthelloGame - {0}'s Player Turn", r_Othello.CurPlayer.PlayerEnum);
+            Text = string.Format("OthelloGame - {0}'s Player Turn", r_Othello.CurPlayer);
         }
 
         private void setCells()
@@ -55,7 +55,10 @@ namespace Othello
         private void executeMove(object i_Sender, EventArgs i_E)
         {
             Cell cell = i_Sender as Cell;
-            r_Othello.PlayTurn(cell.Row, cell.column);
+            if (cell != null)
+            {
+                r_Othello.PlayTurn(cell.Row, cell.Column);
+            }
         }
 
         private Cell initCell(int i_Row, int i_Column)
@@ -114,8 +117,9 @@ namespace Othello
             }
         }
 
-        public void exitGame_GameOver()
+        private void exitGame_GameOver()
         {
+            DialogResult = DialogResult.OK;
             Close();
         }
     }

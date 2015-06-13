@@ -3,49 +3,44 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Othello.enums;
+using Othello.Forms;
 
 namespace Othello
 {
     public delegate void PlayerSwitchedDelegate();
 
-    public delegate void GameOverEventHandler();
+    public delegate void GameOverDelegate();
 
     public class OthelloGame
     {
         public event PlayerSwitchedDelegate m_PlayerSwitched;
 
-        public event GameOverEventHandler m_GameOver;
+        public event GameOverDelegate m_GameOver;
 
-        private Player m_PlayerWhite, m_PlayerBlack;
+        private ePlayer m_PlayerWhite;
+        private ePlayer m_PlayerBlack;
         private GameBoard m_Board;
-        private int m_BoardSize;
-        private Player m_CurPlayer;
+        private ePlayer m_CurPlayer;
         private eNumOfPlayers m_NumOfPlayers;
         private int m_BlackWins = 0, m_WhiteWins = 0;
 
-        public void StartNewGame()
+        public void Play()
         {
             FormGameOptions formGameOptions = new FormGameOptions();
-            bool toPlay = formGameOptions.ShowDialog() != DialogResult.Cancel;
-            if (toPlay)
+            DialogResult toPlay = formGameOptions.ShowDialog();
+            if (toPlay == DialogResult.OK)
             {
-                m_BoardSize = formGameOptions.BoardSize;
                 m_NumOfPlayers = formGameOptions.NumOfPlayers;
-                startPlaying();
-            }
-        }
-
-        private void startPlaying()
-        {
-            bool exitGame = false;
-            while (!exitGame)
-            {
-                setPlayers();
-                m_Board = new GameBoard(this, m_BoardSize);
-                exitGame = new BoardWindow(this, m_Board).ShowDialog() != DialogResult.Cancel;
-                if (!exitGame)
+                bool exitGame = false;
+                while (!exitGame)
                 {
-                    exitGame = toExitGame();
+                    setPlayers();
+                    m_Board = new GameBoard(this, formGameOptions.BoardSize);
+                    exitGame = new BoardWindow(this, m_Board).ShowDialog() != DialogResult.OK;
+                    if (!exitGame)
+                    {
+                        exitGame = toExitGame();
+                    }
                 }
             }
         }
@@ -53,11 +48,11 @@ namespace Othello
         public void PlayTurn(int i_Row, int i_Column)
         {
             m_Board.RemovePosibleMoves();
-            MovesHandler.ExecutePlayMove(i_Row, i_Column, CurPlayer.PlayerEnum, m_Board);
+            MovesHandler.ExecutePlayMove(i_Row, i_Column, CurPlayer, m_Board);
             AfterTurn();
         }
 
-        public bool toExitGame()
+        private bool toExitGame()
         {
             ePlayer winner = getWinner();
             addOneToWinner(winner);
@@ -80,11 +75,11 @@ namespace Othello
         {
             ePlayer winner;
 
-            if (m_Board.PlayerOneScore > m_Board.PlayerTwoScore)
+            if (m_Board.PlayerWhiteScore > m_Board.PlayerBlackScore)
             {
                 winner = ePlayer.White;
             }
-            else if (m_Board.PlayerOneScore < m_Board.PlayerTwoScore)
+            else if (m_Board.PlayerWhiteScore < m_Board.PlayerBlackScore)
             {
                 winner = ePlayer.Black;
             }
@@ -113,7 +108,7 @@ namespace Othello
                 msg.Append("Tie!!! ");
             }
 
-            msg.AppendFormat("({0}/{1})", m_Board.PlayerOneScore, m_Board.PlayerTwoScore);
+            msg.AppendFormat("({0}/{1})", m_Board.PlayerWhiteScore, m_Board.PlayerBlackScore);
             msg.AppendFormat("({0}/{1}){2}", m_WhiteWins, m_BlackWins, Environment.NewLine);
             msg.AppendFormat("Would you like to play another round?");
 
@@ -127,9 +122,15 @@ namespace Othello
 
         private void setPlayers()
         {
-            m_PlayerWhite = new Player(ePlayer.White);
-            m_PlayerBlack = new Player(ePlayer.Black);
+            m_PlayerWhite = ePlayer.White;
+            m_PlayerBlack = ePlayer.Black;
             CurPlayer = m_PlayerWhite;
+        }
+
+        private void switchPlayer()
+        {
+            CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
+            OnPlayerSwitched();
         }
 
         public void AfterTurn()
@@ -140,25 +141,24 @@ namespace Othello
             }
             else
             {
-                switchedPlayer();
-                m_Board.SetPossibleMoves();
-
-                if (NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer.PlayerEnum == ePlayer.Black)
+                switchPlayer();
+                if (m_NumOfPlayers == eNumOfPlayers.OnePlayer && CurPlayer == ePlayer.Black)
                 {
                     AutoPlay.ComputerPlay(this, m_Board);
+                }
+                else if (!m_Board.SetPossibleMoves())
+                {
+                    AfterTurn();
                 }
             }
         }
 
-        private void switchedPlayer()
-        {
-            CurPlayer = CurPlayer.Equals(m_PlayerWhite) ? m_PlayerBlack : m_PlayerWhite;
-            OnPlayerSwitched();
-        }
-
         protected virtual void OnPlayerSwitched()
         {
-            m_PlayerSwitched.Invoke();
+            if (m_PlayerSwitched != null)
+            {
+                m_PlayerSwitched.Invoke();
+            }
         }
 
         protected virtual void OnGameOver()
@@ -171,38 +171,16 @@ namespace Othello
 
         private bool isGameOver()
         {
-            bool isGameOver = false;
-
-            List<int[]> whitePlayerPossibles = MovesHandler.ListAllPossibleMoves(m_PlayerWhite.PlayerEnum, m_Board);
-            List<int[]> blackPlayerPossibles = MovesHandler.ListAllPossibleMoves(m_PlayerBlack.PlayerEnum, m_Board);
-
-            if (whitePlayerPossibles.Count == 0 && blackPlayerPossibles.Count == 0)
-            {
-                isGameOver = true;
-            }
-
-            return isGameOver;
+            List<int[]> whitePlayerPossibles = MovesHandler.ListAllPossibleMoves(ePlayer.White, m_Board);
+            List<int[]> blackPlayerPossibles = MovesHandler.ListAllPossibleMoves(ePlayer.Black, m_Board);
+            
+            return whitePlayerPossibles.Count == 0 && blackPlayerPossibles.Count == 0;
         }
 
-        public Player PlayerBlack
-        {
-            get { return m_PlayerBlack; }
-        }
-
-        public Player PlayerWhite
-        {
-            get { return m_PlayerWhite; }
-        }
-
-        public Player CurPlayer
+        public ePlayer CurPlayer
         {
             get { return m_CurPlayer; }
             set { m_CurPlayer = value; }
-        }
-
-        public eNumOfPlayers NumOfPlayers
-        {
-            get { return m_NumOfPlayers; }
         }
     }
 }

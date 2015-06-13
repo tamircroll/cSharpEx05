@@ -16,8 +16,7 @@ namespace Othello
                     {
                         if (canEat(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player, i_Board))
                         {
-                            eatPiecesInDirection(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player,
-                                i_Board);
+                            eatPiecesInDirection(i_Row, i_Column, rowMoveDirection, columnMoveDirection, i_Player, i_Board);
                         }
                     }
                 }
@@ -38,7 +37,7 @@ namespace Othello
 
                     if (validMove)
                     {
-                        validateMoves.Add(new[] {row, column});
+                        validateMoves.Add(new[] { row, column });
                     }
                 }
             }
@@ -46,19 +45,18 @@ namespace Othello
             return validateMoves;
         }
 
-        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_moveRow, int i_MoveColumn,
-            ePlayer i_Player, GameBoard i_Board)
+        private static void eatPiecesInDirection(int i_Row, int i_Column, int i_MoveRow, int i_MoveColumn, ePlayer i_Player, GameBoard i_Board)
         {
             do
             {
-                i_Row += i_moveRow;
+                i_Row += i_MoveRow;
                 i_Column += i_MoveColumn;
                 i_Board[i_Row, i_Column] = i_Player;
-            } while (i_Board[i_Row + i_moveRow, i_Column + i_MoveColumn] != i_Player);
+            } 
+            while (i_Board[i_Row + i_MoveRow, i_Column + i_MoveColumn] != i_Player);
         }
 
-        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, ePlayer i_Player,
-            GameBoard i_Board)
+        private static bool canEat(int i_Row, int i_Column, int i_RowDirection, int i_ColumnDirection, ePlayer i_Player, GameBoard i_Board)
         {
             int numOfPiecesToEat = 0;
             bool canEat = false;
@@ -82,7 +80,8 @@ namespace Othello
                     }
 
                     numOfPiecesToEat++;
-                } while (i_Board[i_Row, i_Column] != ePlayer.NoPlayer);
+                } 
+                while (i_Board[i_Row, i_Column] != ePlayer.NoPlayer);
             }
 
             return canEat;

@@ -51,7 +51,6 @@
     </Compile>
     <Compile Include="GameBoard.cs" />
     <Compile Include="OthelloGame.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>

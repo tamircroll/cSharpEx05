@@ -3,15 +3,15 @@ using System.Drawing;
 using System.Windows.Forms;
 using Othello.enums;
 
-namespace Othello
+namespace Othello.Forms
 {
     public class FormGameOptions : Form
     {
         private const int k_LengthFromSideBoarder = 10;
-        private Button m_ButtonEncreaseSize = new Button();
-        private Button m_ButtonOnePlayer = new Button();
-        private Button m_ButtonTwoPlayer = new Button();
-        private int m_ButtonHight;
+        private readonly Button r_ButtonEncreaseSize = new Button();
+        private readonly Button r_ButtonOnePlayer = new Button();
+        private readonly Button r_ButtonTwoPlayer = new Button();
+        private readonly int m_ButtonHight;
         private int m_BoardSize = 6;
         private eNumOfPlayers m_NumOfPlayers;
 
@@ -34,13 +34,13 @@ namespace Othello
             get { return m_NumOfPlayers; }
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs i_E)
         {
-            base.OnLoad(e);
+            base.OnLoad(i_E);
             InitControls();
-            Controls.Add(m_ButtonEncreaseSize);
-            Controls.Add(m_ButtonOnePlayer);
-            Controls.Add(m_ButtonTwoPlayer);
+            Controls.Add(r_ButtonEncreaseSize);
+            Controls.Add(r_ButtonOnePlayer);
+            Controls.Add(r_ButtonTwoPlayer);
         }
 
         private void InitControls()
@@ -52,29 +52,29 @@ namespace Othello
 
         private void initEncreaseSizeButton()
         {
-            m_ButtonEncreaseSize.Text = string.Format("Board SIze {0}X{0} (click to increase)", BoardSize);
-            m_ButtonEncreaseSize.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 10);
-            m_ButtonEncreaseSize.Width = ClientSize.Width - (2 * k_LengthFromSideBoarder);
-            m_ButtonEncreaseSize.Height = m_ButtonHight;
-            m_ButtonEncreaseSize.Click += buttonIncreaseBoardSizeByTwo_Click;
+            r_ButtonEncreaseSize.Text = string.Format("Board SIze {0}X{0} (click to increase)", BoardSize);
+            r_ButtonEncreaseSize.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 10);
+            r_ButtonEncreaseSize.Width = ClientSize.Width - (2 * k_LengthFromSideBoarder);
+            r_ButtonEncreaseSize.Height = m_ButtonHight;
+            r_ButtonEncreaseSize.Click += buttonIncreaseBoardSizeByTwo_Click;
         }
 
         private void initOnePlayerButton()
         {
-            m_ButtonOnePlayer.Text = "Play against the computer";
-            m_ButtonOnePlayer.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 2);
-            m_ButtonOnePlayer.Width = (m_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
-            m_ButtonOnePlayer.Height = m_ButtonHight;
-            m_ButtonOnePlayer.Click += buttonOnePlayer_Click;
+            r_ButtonOnePlayer.Text = "Play against the computer";
+            r_ButtonOnePlayer.Location = new Point(k_LengthFromSideBoarder, ClientSize.Height / 2);
+            r_ButtonOnePlayer.Width = (r_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
+            r_ButtonOnePlayer.Height = m_ButtonHight;
+            r_ButtonOnePlayer.Click += buttonOnePlayer_Click;
         }
 
         private void initTwoPlayerButton()
         {
-            m_ButtonTwoPlayer.Text = "Play against your friend";
-            m_ButtonTwoPlayer.Location = new Point((2 * k_LengthFromSideBoarder) + m_ButtonOnePlayer.Width, ClientSize.Height / 2);
-            m_ButtonTwoPlayer.Width = (m_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
-            m_ButtonTwoPlayer.Height = m_ButtonHight;
-            m_ButtonTwoPlayer.Click += buttonTwoPlayers_Click;
+            r_ButtonTwoPlayer.Text = "Play against your friend";
+            r_ButtonTwoPlayer.Location = new Point((2 * k_LengthFromSideBoarder) + r_ButtonOnePlayer.Width, ClientSize.Height / 2);
+            r_ButtonTwoPlayer.Width = (r_ButtonEncreaseSize.Width - k_LengthFromSideBoarder) / 2;
+            r_ButtonTwoPlayer.Height = m_ButtonHight;
+            r_ButtonTwoPlayer.Click += buttonTwoPlayers_Click;
         }
 
         private void buttonIncreaseBoardSizeByTwo_Click(object i_Sender, EventArgs i_E)
@@ -94,12 +94,14 @@ namespace Othello
         private void buttonOnePlayer_Click(object i_Sender, EventArgs i_E)
         {
             m_NumOfPlayers = eNumOfPlayers.OnePlayer;
+            DialogResult = DialogResult.OK;
             Close();
         }
 
         private void buttonTwoPlayers_Click(object i_Sender, EventArgs i_E)
         {
             m_NumOfPlayers = eNumOfPlayers.TwoPlayers;
+            DialogResult = DialogResult.OK;
             Close();
         }
     }
