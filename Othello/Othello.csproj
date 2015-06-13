@@ -36,21 +36,22 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AutoPlay.cs" />
-    <Compile Include="Forms\Cell.cs">
+    <Compile Include="Logic\GameHandler.cs" />
+    <Compile Include="Logic\AutoPlay.cs" />
+    <Compile Include="UIForms\Cell.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MovesHandler.cs" />
+    <Compile Include="Logic\MovesHandler.cs" />
     <Compile Include="enums\eNumOfPlayers.cs" />
     <Compile Include="enums\ePlayer.cs" />
-    <Compile Include="Forms\BoardWindow.cs">
+    <Compile Include="UIForms\BoardWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormGameOptions.cs">
+    <Compile Include="UIForms\FormGameOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GameBoard.cs" />
-    <Compile Include="OthelloGame.cs" />
+    <Compile Include="Logic\GameBoard.cs" />
+    <Compile Include="Othello.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Othello.enums;
+using Othello.Logic;
 
 namespace Othello.UIForms
 {
@@ -12,12 +13,12 @@ namespace Othello.UIForms
         private const int k_CellSpaces = 3;
         private readonly int r_NumOfCells;
         private readonly GameBoard r_Board;
-        private readonly OthelloGame r_Othello;
+        private readonly GameHandler m_GameHandler;
         private Cell[,] m_Cells;
 
-        public BoardWindow(OthelloGame i_Othello, GameBoard i_Board)
+        public BoardWindow(GameHandler i_GameHandler, GameBoard i_Board)
         {
-            r_Othello = i_Othello;
+            m_GameHandler = i_GameHandler;
             r_NumOfCells = i_Board.Size;
             r_Board = i_Board;
             setBordOptions();
@@ -25,13 +26,13 @@ namespace Othello.UIForms
             setTitle_PlayerSwitched();
 
             r_Board.m_ColoringCell += setCellColor_CellColored;
-            r_Othello.m_GameOver += exitGame_GameOver;
-            r_Othello.m_PlayerSwitched += setTitle_PlayerSwitched;
+            i_GameHandler.m_GameOver += exitGame_GameOver;
+            i_GameHandler.m_PlayerSwitched += setTitle_PlayerSwitched;
         }
 
         private void setTitle_PlayerSwitched()
         {
-            Text = string.Format("OthelloGame - {0}'s Player Turn", r_Othello.CurPlayer);
+            Text = string.Format("Othello - {0}'s Player Turn", m_GameHandler.CurPlayer);
         }
 
         private void setCells()
@@ -57,7 +58,7 @@ namespace Othello.UIForms
             Cell cell = i_Sender as Cell;
             if (cell != null)
             {
-                r_Othello.PlayTurn(cell.Row, cell.Column);
+                m_GameHandler.PlayTurn(cell.Row, cell.Column);
             }
         }
 

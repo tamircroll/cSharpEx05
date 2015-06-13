@@ -1,9 +1,8 @@
-﻿using Othello.enums;
+﻿using System.Collections.Generic;
+using Othello.enums;
 
-namespace Othello
+namespace Othello.Logic
 {
-    using System.Collections.Generic;
-
     public class MovesHandler
     {
         public static void ExecutePlayMove(int i_Row, int i_Column, ePlayer i_Player, GameBoard i_Board)
