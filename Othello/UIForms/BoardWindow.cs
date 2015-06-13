@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Othello.enums;
 
-namespace Othello.Forms
+namespace Othello.UIForms
 {
     public class BoardWindow : Form
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Othello.enums;
-using Othello.Forms;
+using Othello.UIForms;
 
 namespace Othello
 {
