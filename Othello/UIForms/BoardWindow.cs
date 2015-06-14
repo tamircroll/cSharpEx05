@@ -42,18 +42,18 @@ namespace Othello.UIForms
                 for (int j = 0; j < r_NumOfCells; j++)
                 {
                     m_Cells[i, j] = initCell(i, j);
+                    m_Cells[i, j].Click += executeMove_Click;
                     if (r_Board[i, j] != ePlayer.NoPlayer)
                     {
                         setCellColor_CellColored(r_Board[i, j], i, j);
                     }
                     
                     Controls.Add(m_Cells[i, j]);
-                    m_Cells[i, j].Click += executeMove;
                 }
             }
         }
 
-        private void executeMove(object i_Sender, EventArgs i_E)
+        private void executeMove_Click(object i_Sender, EventArgs i_E)
         {
             Cell cell = i_Sender as Cell;
             if (cell != null)
@@ -102,14 +102,16 @@ namespace Othello.UIForms
                 case ePlayer.White:
                     cell.ForeColor = Color.Black;
                     cell.BackColor = Color.White;
-                    cell.Enabled = false;
+                    cell.Enabled = true;
                     cell.Text = "O";
+                    cell.Click -= executeMove_Click;
                     break;
                 case ePlayer.Black:
                     cell.ForeColor = Color.White;
                     cell.BackColor = Color.Black;
-                    cell.Enabled = false;
+                    cell.Enabled = true;
                     cell.Text = "O";
+                    cell.Click -= executeMove_Click;
                     break;
                 case ePlayer.PossibleMove:
                     cell.Enabled = true;

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Othello.enums;
-using Othello.Logic;
 
-namespace Othello
+namespace Othello.Logic
 {
     public static class AutoPlay
     {
@@ -17,7 +16,7 @@ namespace Othello
                 MovesHandler.ExecutePlayMove(chosenMove[0], chosenMove[1], ePlayer.Black, i_Board);
             }
 
-            i_GameHandler.AfterTurn();
+            i_GameHandler.AfterPlayerTurn();
         }
     }
 }

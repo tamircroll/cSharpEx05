@@ -58,7 +58,7 @@ namespace Othello.Logic
         {
             r_Board.RemovePosibleMoves();
             MovesHandler.ExecutePlayMove(i_Row, i_Column, CurPlayer, r_Board);
-            AfterTurn();
+            AfterPlayerTurn();
         }
 
         public bool ToExitGame()
@@ -102,6 +102,18 @@ namespace Othello.Logic
 
         private bool toPlayAgain(ePlayer i_Winner)
         {
+            string msg = setEndOfGameMsg(i_Winner);
+
+            DialogResult toPlayAgain = MessageBox.Show(
+                msg,
+                "Othello",
+                MessageBoxButtons.YesNo);
+
+            return toPlayAgain == DialogResult.Yes;
+        }
+
+        private string setEndOfGameMsg(ePlayer i_Winner)
+        {
             StringBuilder msg = new StringBuilder();
 
             if (i_Winner == ePlayer.White)
@@ -121,12 +133,7 @@ namespace Othello.Logic
             msg.AppendFormat("({0}/{1}){2}", m_WhiteWins, m_BlackWins, Environment.NewLine);
             msg.AppendFormat("Would you like to play another round?");
 
-            DialogResult toPlayAgain = MessageBox.Show(
-                msg.ToString(),
-                "Othello",
-                MessageBoxButtons.YesNo);
-
-            return toPlayAgain == DialogResult.Yes;
+            return msg.ToString();
         }
 
         private void setPlayers()
@@ -142,7 +149,7 @@ namespace Othello.Logic
             OnPlayerSwitched();
         }
 
-        public void AfterTurn()
+        public void AfterPlayerTurn()
         {
             if (isGameOver())
             {
@@ -157,7 +164,7 @@ namespace Othello.Logic
                 }
                 else if (!r_Board.SetPossibleMoves())
                 {
-                    AfterTurn();
+                    AfterPlayerTurn();
                 }
             }
         }
