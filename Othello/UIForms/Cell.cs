@@ -5,13 +5,13 @@ namespace Othello.UIForms
 {
     public class Cell : Button
     {
+        private readonly int r_Row, r_Column;
         private ePlayer m_Player;
-        private int m_Row, m_column;
 
         public Cell(int i_Row, int i_Column)
         {
-            m_Row = i_Row;
-            m_column = i_Column;
+            r_Row = i_Row;
+            r_Column = i_Column;
         }
 
         public ePlayer Player
@@ -22,12 +22,12 @@ namespace Othello.UIForms
 
         public int Row
         {
-            get { return m_Row; }
+            get { return r_Row; }
         }
 
         public int Column
         {
-            get { return m_column; }
+            get { return r_Column; }
         }
     }
 }

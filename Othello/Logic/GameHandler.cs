@@ -6,8 +6,16 @@ using Othello.enums;
 
 namespace Othello.Logic
 {
+    public delegate void PlayerSwitchedDelegate();
+
+    public delegate void GameOverDelegate();
+
     public class GameHandler
     {
+        public event PlayerSwitchedDelegate m_PlayerSwitched;
+
+        public event GameOverDelegate m_GameOver;
+
         private readonly GameBoard r_Board;
         private readonly eNumOfPlayers r_NumOfPlayers;
         private ePlayer m_PlayerWhite;
@@ -21,6 +29,11 @@ namespace Othello.Logic
             r_NumOfPlayers = i_NumOfPlayers;
             setPlayers();
             r_Board = new GameBoard(this, i_BoardSize);
+        }
+
+        public void StartANewGame()
+        {
+            Board.InitBoard();
         }
 
         public ePlayer CurPlayer
@@ -49,10 +62,6 @@ namespace Othello.Logic
                 m_GameOver.Invoke();
             }
         }
-
-        public event PlayerSwitchedDelegate m_PlayerSwitched;
-
-        public event GameOverDelegate m_GameOver;
 
         public void PlayTurn(int i_Row, int i_Column)
         {

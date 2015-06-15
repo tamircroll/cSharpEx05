@@ -19,6 +19,11 @@ namespace Othello.Logic
         {
             r_GameHandler = i_GameHandler;
             r_Size = i_Size;
+            InitBoard();
+        }
+
+        public void InitBoard()
+        {
             m_Board = new ePlayer[r_Size, r_Size];
             InitFirstPieces();
             SetPossibleMoves();
@@ -106,7 +111,6 @@ namespace Othello.Logic
 
         public ePlayer[,] Board
         {
-            get { return m_Board; }
             set { m_Board = value; }
         }
 

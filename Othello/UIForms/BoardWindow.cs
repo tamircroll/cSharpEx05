@@ -8,9 +8,8 @@ namespace Othello.UIForms
 {
     public class BoardWindow : Form
     {
-        private const int k_LengthFromBoarders = 15;
-        private const int k_CellSize = 45;
-        private const int k_CellSpaces = 3;
+        private const int k_LengthFromBoarders = 15, k_CellSize = 45, k_CellSpaces = 3;
+        private const string k_NotEmptyCellText = "O";
         private readonly int r_NumOfCells;
         private readonly GameBoard r_Board;
         private readonly GameHandler m_GameHandler;
@@ -90,7 +89,6 @@ namespace Othello.UIForms
         private void setCellColor_CellColored(ePlayer i_Player, int i_Row, int i_Column)
         {
             Cell cell = m_Cells[i_Row, i_Column];
-
             cell.Player = i_Player;
 
             switch (i_Player)
@@ -103,14 +101,14 @@ namespace Othello.UIForms
                     cell.ForeColor = Color.Black;
                     cell.BackColor = Color.White;
                     cell.Enabled = true;
-                    cell.Text = "O";
+                    cell.Text = k_NotEmptyCellText;
                     cell.Click -= executeMove_Click;
                     break;
                 case ePlayer.Black:
                     cell.ForeColor = Color.White;
                     cell.BackColor = Color.Black;
                     cell.Enabled = true;
-                    cell.Text = "O";
+                    cell.Text = k_NotEmptyCellText;
                     cell.Click -= executeMove_Click;
                     break;
                 case ePlayer.PossibleMove:
