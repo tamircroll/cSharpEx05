@@ -39,7 +39,7 @@ namespace Othello.Logic
             {
                 if (value != ePlayer.PossibleMove && value != ePlayer.NoPlayer)
                 {
-                    calcScore(i_Row, i_Col, value);
+                    updateScore(i_Row, i_Col, value);
                 }
 
                 m_Board[i_Row, i_Col] = value;
@@ -66,7 +66,7 @@ namespace Othello.Logic
             return m_PossibleMoves.Count > 0;
         }
 
-        private void calcScore(int i_Row, int i_Col, ePlayer i_Player)
+        private void updateScore(int i_Row, int i_Col, ePlayer i_Player)
         {
             if (i_Player == ePlayer.White && m_Board[i_Row, i_Col] == ePlayer.Black)
             {
