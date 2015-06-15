@@ -12,7 +12,7 @@ namespace Othello.Logic
         private readonly int r_Size;
         private readonly GameHandler r_GameHandler;
         private ePlayer[,] m_Board;
-        private int m_PlayerWhiteScore = 0, m_PlayerBlackScore = 0;
+        private int m_PlayerWhiteScore, m_PlayerBlackScore;
         private List<int[]> m_PossibleMoves;
 
         public GameBoard(GameHandler i_GameHandler, int i_Size)
@@ -24,6 +24,8 @@ namespace Othello.Logic
 
         public void InitBoard()
         {
+            m_PlayerWhiteScore = 0;
+            m_PlayerBlackScore = 0;
             m_Board = new ePlayer[r_Size, r_Size];
             InitFirstPieces();
             SetPossibleMoves();
